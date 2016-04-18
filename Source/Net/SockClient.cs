@@ -1,43 +1,29 @@
-/*
- * Created by SharpDevelop.
- * User: BIOSTAT26
- * Date: 22/08/2005
- * Time: 13:53
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
-using System;
-using System.IO;
-using System.Collections;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
-using System.Diagnostics;
-using HelperTools;
-
 namespace Server
 {
-	public delegate void RemoveClientDelegate( SockClient client );
-	/// <summary>
-	/// Description of SockClient.
-	/// </summary>
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Net.Sockets;
+
+    using HelperTools;
+
+    public delegate void RemoveClientDelegate( SockClient client );
+
 	public class SockClient : IDisposable
 	{
 		RemoveClientDelegate removeFromTheServerList;
 		public Socket clientSocket;
-		//byte []dataToSend = new byte[ 8192 ];
+		// byte []dataToSend = new byte[ 8192 ];
 		byte []dataReceive = new byte[ 65536 ];
 		bool disposed = false;
-	//	public Mutex sendMutex = new Mutex();
+	    // public Mutex sendMutex = new Mutex();
 		
 		MemoryStream ms = new MemoryStream();
 		public bool Disposed
 		{
 			get { return disposed; }
 		}
-
-		
+        
 		public SockClient( Socket from, RemoveClientDelegate rftsl )
 		{
 			removeFromTheServerList = rftsl;
@@ -46,17 +32,16 @@ namespace Server
 
 		public void Start()
 		{
-			clientSocket.BeginReceive( dataReceive, 0, dataReceive.Length,0,
-				new AsyncCallback( this.OnReceiveData ), this ); 		
+			clientSocket.BeginReceive(dataReceive, 0, dataReceive.Length, 0, new AsyncCallback(this.OnReceiveData), this); 		
 		}
 		
-		public virtual void OnReceiveData( IAsyncResult ar ) 
+		public virtual void OnReceiveData(IAsyncResult result) 
 		{
 			try
 			{
 				if ( disposed )
 					return;			
-				int len = clientSocket.EndReceive( ar );		
+				int len = clientSocket.EndReceive(result);		
 				if ( len <= 0 )
 				{//	VERY IMPORTANT, HERE IS THE CONNECTION CLOSE DETECTION					
 					Dispose();
@@ -67,7 +52,7 @@ namespace Server
 				byte []toSend = ProcessDataReceived( dataReceive, len );
 				if ( toSend != null )
 				{
-					clientSocket.BeginSend( toSend, 0, toSend.Length, 0, new AsyncCallback( this.OnSended ),this );
+					clientSocket.BeginSend( toSend, 0, toSend.Length, 0, new AsyncCallback( this.OnSended ), this);
 				}
 				else
 				{
@@ -81,7 +66,8 @@ namespace Server
 				Dispose();
 			}
 		}
-		public virtual byte [] ProcessDataReceived( byte []data, int length )
+
+		public virtual byte[] ProcessDataReceived( byte []data, int length )
 		{
 			return null;
 		}
@@ -109,6 +95,7 @@ namespace Server
 				Dispose();
 			}
 		}
+
 		public virtual void Send( byte []toSendBuff, int len )
 		{
 			try
@@ -129,6 +116,7 @@ namespace Server
 				Dispose();
 			}
 		}
+
 		public virtual void Send( char []toSendBuff, int len )
 		{
 			try
@@ -145,6 +133,7 @@ namespace Server
 				Dispose();
 			}
 		}
+
 		public virtual void Send( string str )
 		{
 			try
@@ -162,6 +151,7 @@ namespace Server
 				Dispose();
 			}
 		}
+
 		public void OnSended( IAsyncResult ar )
 		{
 			try
@@ -194,6 +184,7 @@ namespace Server
 				Dispose();
 			}
 		}	
+
 		public void Dispose() 
 		{
 			//sendMutex.ReleaseMutex();
@@ -213,6 +204,7 @@ namespace Server
 			if ( removeFromTheServerList != null )
 				removeFromTheServerList( this );
 		}		
+
 		public IPAddress IP
 		{
 			get 

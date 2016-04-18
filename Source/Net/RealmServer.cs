@@ -39,6 +39,7 @@ namespace Server
 			address = lep.Address;
 			Start();
 		}
+
 		public bool Start()
 		{
 			try 
@@ -80,9 +81,10 @@ namespace Server
 				Dispose();
 			}
 		}		
-		public void RemoveClient( SockClient client )
+
+		public void RemoveClient(SockClient client)
 		{
-			( client as PlayerHandler ).Logout();
+			(client as PlayerHandler).Logout();
 			clients.Remove( client );			
 		}
 		

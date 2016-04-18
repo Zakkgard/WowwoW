@@ -1,28 +1,29 @@
-using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Threading;
-using System.Security.Cryptography;
-using System.Net.Sockets;
-using System.Net;
-using HelperTools;
-
 namespace Server
 {
-	public class ClientConnection : SockClient
+    using System;
+    using System.Collections;
+    using System.Security.Cryptography;
+    using System.Net.Sockets;
+    using HelperTools;
+
+    public class ClientConnection : SockClient
 	{
-		public ClientConnection( Socket sock, RemoveClientDelegate rcd ) : base( sock, rcd )
+		public ClientConnection(Socket sock, RemoveClientDelegate rcd) 
+            : base(sock, rcd)
 		{
 		}
+
 		public static int s1 = 1;
 
-		public static byte[] Reverse( byte[]from )
+		public static byte[] Reverse(byte[] from)
 		{
-			byte []res = new byte[ from.Length ];
+			byte[] res = new byte[from.Length];
 			int i = 0;
-			for(int t = from.Length - 1;t>=0;t--)
-				res[ i++ ] = from[ t ];
+			for(int t = from.Length - 1; t >= 0; t--)
+            {
+                res[i++] = from[t];
+            }
+
 			return res;
 		}
 
@@ -37,17 +38,17 @@ namespace Server
 		}
 
 		BigInteger B;
-		static byte []N = { 0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B, 
+		static byte[] N = { 0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B, 
 							  0xBD, 0xAD, 0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53, 
 							  0x08, 0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F, 
 							  0xAB, 0x3C, 0x82, 0x87, 0x2A, 0x3E, 0x9B, 0xB7 };
-		static byte []rN = Reverse( N );
+		static byte[] rN = Reverse(N);
 
-		byte []salt = new byte[ 32 ];
+		byte[] salt = new byte[32];
 		BigInteger v;
-		byte []b = new byte[ 20 ];	
-		byte []rb;
-		byte []userName;
+		byte[] b = new byte[20];	
+		byte[] rb;
+		byte[] userName;
 		BigInteger K;
 		static Random rand = new Random();
 		//static 
@@ -55,12 +56,13 @@ namespace Server
 
 		public static Hashtable tryLoggin = new Hashtable();
 
-		public override byte [] ProcessDataReceived( byte []data, int length )
+		public override byte[] ProcessDataReceived(byte[] data, int length)
 		{
 		//	Console.WriteLine("Rec {0}", data[ 0 ] );
 		//	HexViewer.View( data, 0, length );
 			int t;
-			switch( data[ 0 ] )
+            Console.WriteLine("Received: " + data[0]);
+			switch(data[0])
 			{
 				case 0x00://	Logon challenge	
 					/*foreach( Account acc in World.allAccounts )
@@ -276,6 +278,7 @@ namespace Server
 				case 0x02://	Reconnect challenge
 				{
 				//	Console.WriteLine( "Reconnect challenge" );
+
 					byte []packRecoChallenge = new byte[ 34 ];
 					packRecoChallenge[ 0 ] = 0x02;
 					packRecoChallenge[ 1 ] = 0x00;

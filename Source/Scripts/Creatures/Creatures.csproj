@@ -1,0 +1,459 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{58EA49C8-4C60-4561-AD02-52280C9464BE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Creatures</RootNamespace>
+    <AssemblyName>Creatures</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Ambient\Aaron.cs" />
+    <Compile Include="Ambient\Adam.cs" />
+    <Compile Include="Ambient\Ambient2.cs" />
+    <Compile Include="Ambient\Ambient2Tresure.cs" />
+    <Compile Include="Ambient\Ambient3.cs" />
+    <Compile Include="Ambient\AnconaChicken.cs" />
+    <Compile Include="Ambient\AnduinWrynn.cs" />
+    <Compile Include="Ambient\AnturFallow.cs" />
+    <Compile Include="Ambient\SquealerThornmantle.cs" />
+    <Compile Include="Animals\Adder.cs" />
+    <Compile Include="Animals\Prey.cs" />
+    <Compile Include="BCAddon.cs" />
+    <Compile Include="Beast\BatFamily\Bats.cs" />
+    <Compile Include="Beast\BatFamily\Batsloot.cs" />
+    <Compile Include="Beast\BearFamily\BearFamily.cs" />
+    <Compile Include="Beast\BearFamily\BearFamilyloot.cs" />
+    <Compile Include="Beast\BoarFamily\BoarDrops.cs" />
+    <Compile Include="Beast\BoarFamily\BoarFamily.cs" />
+    <Compile Include="Beast\CarrionBirdFamily\CarrionBirdDrop.cs" />
+    <Compile Include="Beast\CarrionBirdFamily\CarrionBirdFamily.cs" />
+    <Compile Include="Beast\Cats\CatFamily.cs" />
+    <Compile Include="Beast\Cats\CatFamilyLoots.cs" />
+    <Compile Include="Beast\CrabFamily\Crab.cs" />
+    <Compile Include="Beast\CrabFamily\Crabloot.cs" />
+    <Compile Include="Beast\Crocolisks\CrocoliskDrops.cs" />
+    <Compile Include="Beast\Crocolisks\Crocolisks.cs" />
+    <Compile Include="Beast\FamilyWindSerpent\FamilyWindSerpent.cs" />
+    <Compile Include="Beast\FamilyWindSerpent\FamilyWindSerpentLoot.cs" />
+    <Compile Include="Beast\GorillaFamily\GorillaFamily.cs" />
+    <Compile Include="Beast\GorillaFamily\GorillaFamilyloot.cs" />
+    <Compile Include="Beast\HyenaFamily\HyenaFamily.cs" />
+    <Compile Include="Beast\HyenaFamily\HyenaFamilyDrops.cs" />
+    <Compile Include="Beast\OwlFamily\OwlFamily.cs" />
+    <Compile Include="Beast\OwlFamily\OwlFamilyLoot.cs" />
+    <Compile Include="Beast\RaptorFamily\RaptorFamily.cs" />
+    <Compile Include="Beast\RaptorFamily\RaptorFamilyloot.cs" />
+    <Compile Include="Beast\ScorpidFamily\ScorpidFamily.cs" />
+    <Compile Include="Beast\ScorpidFamily\ScorpidFamilyloot.cs" />
+    <Compile Include="Beast\Spider\SpiderFamily.cs" />
+    <Compile Include="Beast\Spider\SpiderFamilyDrops.cs" />
+    <Compile Include="Beast\TallstriderFamily\PlainStriderDrops.cs" />
+    <Compile Include="Beast\TallstriderFamily\PlainStriders.cs" />
+    <Compile Include="Beast\TurtleFamily\TurtleFamily.cs" />
+    <Compile Include="Beast\TurtleFamily\TurtleFamilyloot.cs" />
+    <Compile Include="Beast\WolfFamily\WolfFamily.cs" />
+    <Compile Include="Beast\WolfFamily\WolfTreasure.cs" />
+    <Compile Include="DemonType\DoomguardFamily.cs" />
+    <Compile Include="DemonType\DoomguardFamilyDrops.cs" />
+    <Compile Include="DemonType\HoundFamily.cs" />
+    <Compile Include="DemonType\HoundFamilyDrops.cs" />
+    <Compile Include="DemonType\InfernalFamily.cs" />
+    <Compile Include="DemonType\InfernalFamilyDrops.cs" />
+    <Compile Include="Dragons\Flying Dragons\FlyingDragons.cs" />
+    <Compile Include="Dragons\Flying Dragons\FlyingDragonsDrops.cs" />
+    <Compile Include="Dragons\Whelps\Whelps.cs" />
+    <Compile Include="Dragons\Whelps\WhelpsDrops.cs" />
+    <Compile Include="Elemental\Elemental.cs" />
+    <Compile Include="Elemental\ElementalDrops.cs" />
+    <Compile Include="Elemental\ElementalDrops2.cs" />
+    <Compile Include="Elemental\ElementalDrops3.cs" />
+    <Compile Include="Elemental\ElementalDrops4.cs" />
+    <Compile Include="Elemental\Timberling\Timberling.cs" />
+    <Compile Include="Elemental\Timberling\TimberlingDrop.cs" />
+    <Compile Include="elitmoney.cs" />
+    <Compile Include="Giant\GiantFamily.cs" />
+    <Compile Include="Giant\GiantFamilyDrops.cs" />
+    <Compile Include="Giant\MobArmorHP.cs" />
+    <Compile Include="Humanoids\Alatai\Atalai.cs" />
+    <Compile Include="Humanoids\Anvilrage\Anvilrage.cs" />
+    <Compile Include="Humanoids\ArgentDawn\TheArgentDawn.cs" />
+    <Compile Include="Humanoids\Arkoran\Arkkoran.cs" />
+    <Compile Include="Humanoids\Ashenval\Ashenvale.cs" />
+    <Compile Include="Humanoids\BlackRock\Blackrock.cs" />
+    <Compile Include="Humanoids\BlackRock\BlackrockLoot.cs" />
+    <Compile Include="Humanoids\BlackwaterRaiders\BlackwaterRaiders.cs" />
+    <Compile Include="Humanoids\Bloodfury\Bloodfury.cs" />
+    <Compile Include="Humanoids\Bloodsail\Bloodsail.cs" />
+    <Compile Include="Humanoids\Bloodsail\BloodsailLoot.cs" />
+    <Compile Include="Humanoids\Bloodscalp\Bloodscalp.cs" />
+    <Compile Include="Humanoids\Bloodscalp\BloodscalpDrops.cs" />
+    <Compile Include="Humanoids\BurningBlade\BurningBlade.cs" />
+    <Compile Include="Humanoids\BurningBlade\BurningBladeLoots.cs" />
+    <Compile Include="Humanoids\Dalaran\Dalaran.cs" />
+    <Compile Include="Humanoids\Dalaran\DalaranLoot.cs" />
+    <Compile Include="Humanoids\Darkeye.cs" />
+    <Compile Include="Humanoids\DarkIron\DarkIron.cs" />
+    <Compile Include="Humanoids\DarkIron\DarkIronLoots.cs" />
+    <Compile Include="Humanoids\DefiasBrotherhood\ThoriumBrotherhood.cs" />
+    <Compile Include="Humanoids\DefiasBrotherhood\TreasureTable\DefiasBandit.cs" />
+    <Compile Include="Humanoids\DefiasBrotherhood\TreasureTable\DefiasBanditDrops2.cs" />
+    <Compile Include="Humanoids\DefiasBrotherhood\TreasureTable\DefiasThug.cs" />
+    <Compile Include="Humanoids\EvilHuman.cs" />
+    <Compile Include="Humanoids\Gnarlpine\Gnarlpine.cs" />
+    <Compile Include="Humanoids\Gnarlpine\GnarlpineDrops.cs" />
+    <Compile Include="Humanoids\Gravelsnout\Gravelsnout.cs" />
+    <Compile Include="Humanoids\Gravelsnout\GravelsnoutTreasure.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\AllianceGuard.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\allianceloot.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\Darnassus.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\DarnassusLoot.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\IronforgeGuard.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\IronforgeGuardloot.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\questg\Stormwind\DeputyWillem.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\questg\Stormwind\MarshalDughan.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\questg\Stormwind\MarshalMcBride.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\stormwind.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\stormwindloot.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\TheNightWatch.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\TheNigtWatchLoot.cs" />
+    <Compile Include="Humanoids\Guards\Aliance\ThePeoplesMilitia.cs" />
+    <Compile Include="Humanoids\Guards\Goblinguard.cs" />
+    <Compile Include="Humanoids\Guards\GoblinguardLoot.cs" />
+    <Compile Include="Humanoids\Guards\Horde\Horde.cs" />
+    <Compile Include="Humanoids\Guards\Horde\HordeLoot.cs" />
+    <Compile Include="Humanoids\Guards\Horde\Orgrimmar.cs" />
+    <Compile Include="Humanoids\Guards\Horde\OrgrimmarLoot.cs" />
+    <Compile Include="Humanoids\Guards\Horde\ThunderBluff.cs" />
+    <Compile Include="Humanoids\Guards\Horde\ThunderBluffLoot.cs" />
+    <Compile Include="Humanoids\Guards\Horde\UndercityGuard.cs" />
+    <Compile Include="Humanoids\Guards\Horde\UndercityGuardloot.cs" />
+    <Compile Include="Humanoids\Guards\trash.cs" />
+    <Compile Include="Humanoids\Guards\trashlool.cs" />
+    <Compile Include="Humanoids\Kobold\Kobold.cs" />
+    <Compile Include="Humanoids\Kobold\TreasureTables\CoboldTreasure.cs" />
+    <Compile Include="Humanoids\Kolkar.cs" />
+    <Compile Include="Humanoids\Kurzen\Kurzen.cs" />
+    <Compile Include="Humanoids\Kurzen\KurzenHumanoid.cs" />
+    <Compile Include="Humanoids\Kurzen\KurzenHumanoid1.cs" />
+    <Compile Include="Humanoids\Kurzen\TwilightsHammer.cs" />
+    <Compile Include="Humanoids\Kurzen\TwilightsHammerLoot.cs" />
+    <Compile Include="Humanoids\Murloc\Murloc.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocCoastrunner.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocFlesheater.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocForager.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocHunter.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\Murlocloot.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocLurker.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocMinorOracle.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocMinorTidecaller.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocNetter.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocNightcrawler.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocOracle.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocRaider.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocScout.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocShorestriker.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocStreamrunner.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocTidecaller.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocTidehunter.cs" />
+    <Compile Include="Humanoids\Murloc\TreasureTables\MurlocWarrior.cs" />
+    <Compile Include="Humanoids\npc\banker\banker.cs" />
+    <Compile Include="Humanoids\npc\SpiritHealer\BattleFieldSpirit.cs" />
+    <Compile Include="Humanoids\npc\SpiritHealer\SpiritHealer.cs" />
+    <Compile Include="Humanoids\npc\StableMaster\StableMaster.cs" />
+    <Compile Include="Humanoids\npc\taxi\BatHandler.cs" />
+    <Compile Include="Humanoids\npc\taxi\GryphonMaster.cs" />
+    <Compile Include="Humanoids\npc\taxi\HippogryphMaster.cs" />
+    <Compile Include="Humanoids\npc\taxi\WindRiderMaster.cs" />
+    <Compile Include="Humanoids\npc\trainer\Alchemist.cs" />
+    <Compile Include="Humanoids\npc\trainer\Blaciksmith.cs" />
+    <Compile Include="Humanoids\npc\trainer\Cooking.cs" />
+    <Compile Include="Humanoids\npc\trainer\Druid.cs" />
+    <Compile Include="Humanoids\npc\trainer\Else.cs" />
+    <Compile Include="Humanoids\npc\trainer\Enchanting.cs" />
+    <Compile Include="Humanoids\npc\trainer\Engineering.cs" />
+    <Compile Include="Humanoids\npc\trainer\FirstAid.cs" />
+    <Compile Include="Humanoids\npc\trainer\Fishing.cs" />
+    <Compile Include="Humanoids\npc\trainer\Herbalism.cs" />
+    <Compile Include="Humanoids\npc\trainer\Hunter.cs" />
+    <Compile Include="Humanoids\npc\trainer\Leatherworking.cs" />
+    <Compile Include="Humanoids\npc\trainer\Mage.cs" />
+    <Compile Include="Humanoids\npc\trainer\Mining.cs" />
+    <Compile Include="Humanoids\npc\trainer\Mount.cs" />
+    <Compile Include="Humanoids\npc\trainer\Paladin.cs" />
+    <Compile Include="Humanoids\npc\trainer\Priest.cs" />
+    <Compile Include="Humanoids\npc\trainer\Rogue.cs" />
+    <Compile Include="Humanoids\npc\trainer\Shaman.cs" />
+    <Compile Include="Humanoids\npc\trainer\Skinning.cs" />
+    <Compile Include="Humanoids\npc\trainer\Tailoring.cs" />
+    <Compile Include="Humanoids\npc\trainer\Warlock.cs" />
+    <Compile Include="Humanoids\npc\trainer\Warrior.cs" />
+    <Compile Include="Humanoids\npc\trainer\WeaponMaster.cs" />
+    <Compile Include="Humanoids\npc\vendor\AlchemySupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\ArcaneVendors.cs" />
+    <Compile Include="Humanoids\npc\vendor\Armorer.cs" />
+    <Compile Include="Humanoids\npc\vendor\AxeMerchant.cs" />
+    <Compile Include="Humanoids\npc\vendor\BagVendor.cs" />
+    <Compile Include="Humanoids\npc\vendor\Bartender.cs" />
+    <Compile Include="Humanoids\npc\vendor\BlacksmithsingSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\Bowyer.cs" />
+    <Compile Include="Humanoids\npc\vendor\CookingSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\DemonTrainer.cs" />
+    <Compile Include="Humanoids\npc\vendor\Else.cs" />
+    <Compile Include="Humanoids\npc\vendor\EnchantingSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\EngineeringSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\FishingSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\FoodAndDrink.cs" />
+    <Compile Include="Humanoids\npc\vendor\GeneralGoods.cs" />
+    <Compile Include="Humanoids\npc\vendor\GunMerchant.cs" />
+    <Compile Include="Humanoids\npc\vendor\HerbalismSupplier.cs" />
+    <Compile Include="Humanoids\npc\vendor\InnkeeperNew.cs" />
+    <Compile Include="Humanoids\npc\vendor\LeatherworkingSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\MiningSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\PoisonSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\ReagentVendor.cs" />
+    <Compile Include="Humanoids\npc\vendor\TailoringSupplies.cs" />
+    <Compile Include="Humanoids\npc\vendor\TradeGoods.cs" />
+    <Compile Include="Humanoids\npc\vendor\Vintner.cs" />
+    <Compile Include="Humanoids\npc\vendor\WeaponMerchant.cs" />
+    <Compile Include="Humanoids\Ogre\Boulderfist\Boulderfist.cs" />
+    <Compile Include="Humanoids\Ogre\Boulderfist\BoulderfistDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Crushridge\Crushridge.cs" />
+    <Compile Include="Humanoids\Ogre\Crushridge\CrushridgeDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Deadwind\Deadwind.cs" />
+    <Compile Include="Humanoids\Ogre\Deadwind\DeadwindDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Dreadmaul\Dreadmaul.cs" />
+    <Compile Include="Humanoids\Ogre\Dreadmaul\DreadmaulDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Dunemaul\Dunemaul.cs" />
+    <Compile Include="Humanoids\Ogre\Dunemaul\DunemaulDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Dustbelcher\Dustbelcher.cs" />
+    <Compile Include="Humanoids\Ogre\Dustbelcher\DustbelcherDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Firegut\Firegut.cs" />
+    <Compile Include="Humanoids\Ogre\Firegut\FiregutDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Gordok\Gordok.cs" />
+    <Compile Include="Humanoids\Ogre\Gordok\GordokDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Gordunni\Gordunni.cs" />
+    <Compile Include="Humanoids\Ogre\Gordunni\GordunniDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Mogrosh\Mogrosh.cs" />
+    <Compile Include="Humanoids\Ogre\Mogrosh\MogroshDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Splinter\Splinter.cs" />
+    <Compile Include="Humanoids\Ogre\Splinter\SplinterDrops.cs" />
+    <Compile Include="Humanoids\Ogre\Urok\Urok.cs" />
+    <Compile Include="Humanoids\Ogre\Urok\UrokDrops.cs" />
+    <Compile Include="Humanoids\OOze\Ooze.cs" />
+    <Compile Include="Humanoids\OOze\OozeLoot.cs" />
+    <Compile Include="Humanoids\OtherHumanoud.cs" />
+    <Compile Include="Humanoids\OtherHumanoudLoot.cs" />
+    <Compile Include="Humanoids\Peasant\Peasant.cs" />
+    <Compile Include="Humanoids\Peasant\PeasantDrops.cs" />
+    <Compile Include="Humanoids\Peon\Peon.cs" />
+    <Compile Include="Humanoids\Peon\PeonDrop.cs" />
+    <Compile Include="Humanoids\Razofen\Razorfen.cs" />
+    <Compile Include="Humanoids\Razofen\RazorfenDrops.cs" />
+    <Compile Include="Humanoids\Razormane\Razormane.cs" />
+    <Compile Include="Humanoids\Razormane\RazormaneLoot.cs" />
+    <Compile Include="Humanoids\Redridge\Redridge.cs" />
+    <Compile Include="Humanoids\Redridge\RedridgeLoot.cs" />
+    <Compile Include="Humanoids\Riverpaw\Riverpaw.cs" />
+    <Compile Include="Humanoids\Riverpaw\RiverpawDrops.cs" />
+    <Compile Include="Humanoids\Rockjaws\Rockjaws.cs" />
+    <Compile Include="Humanoids\Rockjaws\TreasureTables\Trogg1.cs" />
+    <Compile Include="Humanoids\Rockjaws\TreasureTables\Trogg2.cs" />
+    <Compile Include="Humanoids\Saltscale\Saltscale.cs" />
+    <Compile Include="Humanoids\Sandfury\Sandfury.cs" />
+    <Compile Include="Humanoids\Sandfury\SandfuryDrops.cs" />
+    <Compile Include="Humanoids\SergeantBrashclaw.cs" />
+    <Compile Include="Humanoids\Skullsplitter\Skullsplitter.cs" />
+    <Compile Include="Humanoids\Skullsplitter\SkullsplitterDrops.cs" />
+    <Compile Include="Humanoids\Syndicate\Syndicate.cs" />
+    <Compile Include="Humanoids\Syndicate\SyndicateLoot.cs" />
+    <Compile Include="Humanoids\Trisfal\Tristifal.cs" />
+    <Compile Include="Humanoids\Undead\Silverlaine\BaronSilverlaine.cs" />
+    <Compile Include="Humanoids\Undead\Skeletons\SkeletonLoot.cs" />
+    <Compile Include="Humanoids\Undead\Skeletons\Skeletons.cs" />
+    <Compile Include="Humanoids\Undead\Zombies\Zombies.cs" />
+    <Compile Include="Humanoids\Undead\Zombies\ZombiesLoot.cs" />
+    <Compile Include="Humanoids\Venture\VentureCo.cs" />
+    <Compile Include="Humanoids\Venture\VentureCoLoots.cs" />
+    <Compile Include="Humanoids\Vilebranch\Vilebranch.cs" />
+    <Compile Include="Humanoids\Vilebranch\VilebranchLoot.cs" />
+    <Compile Include="Humanoids\Witherbark.cs" />
+    <Compile Include="Humanoids\Zanzil\Zanzil.cs" />
+    <Compile Include="Humanoids\Zanzil\ZanzilDrops.cs" />
+    <Compile Include="Mechanical\Engineering Mechs\EngineeringMechs.cs" />
+    <Compile Include="Mechanical\Engineering Mechs\EngineeringMechsDrops.cs" />
+    <Compile Include="Mechanical\Gnomeregan\Gnomeregan.cs" />
+    <Compile Include="Mechanical\Gnomeregan\GnomereganDrops.cs" />
+    <Compile Include="Mechanical\Harvest\Harvest.cs" />
+    <Compile Include="Mechanical\Harvest\HarvestDrops.cs" />
+    <Compile Include="Mechanical\Misc.cs" />
+    <Compile Include="Mechanical\MiscLoot.cs" />
+    <Compile Include="Mechanical\Shredders\Shredders.cs" />
+    <Compile Include="Mechanical\Shredders\ShreddersDrops.cs" />
+    <Compile Include="mount\Horses.cs" />
+    <Compile Include="mount\Kodo.cs" />
+    <Compile Include="mount\Mechanostrider.cs" />
+    <Compile Include="mount\other.cs" />
+    <Compile Include="mount\Ram.cs" />
+    <Compile Include="mount\Raptor.cs" />
+    <Compile Include="mount\Saber.cs" />
+    <Compile Include="mount\Stallion.cs" />
+    <Compile Include="mount\Tallstrider.cs" />
+    <Compile Include="mount\wolf.cs" />
+    <Compile Include="NpcByLocation\Brill\Brill.cs" />
+    <Compile Include="NpcByLocation\elgardpell.cs" />
+    <Compile Include="NpcByLocation\ElviForest\BillyMaclure.cs" />
+    <Compile Include="NpcByLocation\ElviForest\GerardTiller.cs" />
+    <Compile Include="NpcByLocation\ElviForest\GrammaStonefield.cs" />
+    <Compile Include="NpcByLocation\ElviForest\MaStonefield.cs" />
+    <Compile Include="NpcByLocation\ElviForest\MaybellMaclure.cs" />
+    <Compile Include="NpcByLocation\ElviForest\MillyOsworth.cs" />
+    <Compile Include="NpcByLocation\ElviForest\RemyTwoTime.cs" />
+    <Compile Include="NpcByLocation\ElviForest\SaraTimberlain.cs" />
+    <Compile Include="NpcByLocation\ElviForest\SupervisorRaelen.cs" />
+    <Compile Include="NpcByLocation\ElviForest\TommyJoeStonefield.cs" />
+    <Compile Include="NpcByLocation\ElviForest\WilliamPestle.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\BalirFrosthammer.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\DurnanFurcutter.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\FelixWhindlebolt.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\GrelinWhitebeard.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\NoriPridedrift.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\SenirWhitebeard.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\StenStoutarm.cs" />
+    <Compile Include="NpcByLocation\Ironforge_dwarf_gnom\TalinKeeneye.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Mountains\AlteracMountainsAlliance.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Mountains\AlteracMountainsBoth.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Mountains\AlteracMountainsHorde.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Valley\AlteracValleyAlliance.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Valley\AlteracValleyBoth.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Alterac Valley\AlteracValleyHorde.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Arathi Highlands\ArathiHightlandsAlliance.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Arathi Highlands\ArathiHightlandsBoth.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Arathi Highlands\ArathiHightlandsHorde.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Ashenvale\AshenvaleAlliance.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Ashenvale\AshenvaleHorde.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Azshara\Azshara.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Badlands\BadlandsAlliance.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Badlands\BadlandsBoth.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Badlands\BadlandsHorde.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\BlackrockDepths\Blackrock.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\BlackrockMountain\BlackrockMountain.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\BlackrockSpire\BlackrockSpire.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\BlastedLands\BlastedLands.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\BurningSteppes\BurningSteppes.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\DarkmoonFaire\DarkmoonFaireBoth.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Darkshore\DarkshoreNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Darnassus\DarnassusNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Desolace\DesolaceNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\DireMaul\DireMaulNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\DunMororgh\DunMororghNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Durotar\DurotarNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Duskwood\Duskwood.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\DustwallowMarsh\DustwallowMarshNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\EasternPlaguelands\EasternPlaguelandsNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\ElwynnForest\ElwynnForestNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Felwood\FelwoodNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Feralas\FeralasNPC.cs" />
+    <Compile Include="NpcByLocation\QuestNPCs\Ironforge\IronforgeNPC.cs" />
+    <Compile Include="NpcByLocation\Stormwind\GrimandElmore.cs" />
+    <Compile Include="NpcByLocation\Stormwind\Stormwind.cs" />
+    <Compile Include="NpcByLocation\Stormwind\StormwindLoot.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\ArchDruidFandralStaghelm.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\AthridasBearmantle.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\ConservatorIlthalaine.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\CorithrasMoonrage.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\CurgleCranklehop.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Denalan.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\DiraniaSilvershine.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Elanaria.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\ErelasAmbersky.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\FerocitastheDreamEater.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\GaerolasTalvethren.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\GilshalanWindwalker.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Iverron.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Jenal.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\LordMelenas.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Lucius.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Mathiel.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Melarith.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\MelitharStaghelm.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Mist.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\MoonPriestessAmara.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\ObenRageclaw.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Onu.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\OrenthilWhisperwind.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Porthannius.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\RabineSaturna.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Ranshalla.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\RellianGreenspyre.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\RenzikTheShiv.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\SethirtheAncient.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\SyralBladeleaf.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\TallonkaiSwiftroot.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\Tarindrella.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\TenaronStormgrip.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\UrsalMauler.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\VorlusVilehoof.cs" />
+    <Compile Include="NpcByLocation\TeldRassil\ZennFoulhoof.cs" />
+    <Compile Include="NpcByLocation\TirisfalGlades\DeathguardSaltain.cs" />
+    <Compile Include="NpcByLocation\TirisfalGlades\ShadowPriestSarvis.cs" />
+    <Compile Include="NpcByLocation\TirisfalGlades\UndertakerMordo.cs" />
+    <Compile Include="NpcByLocation\Westfall\CaptainGrayson.cs" />
+    <Compile Include="NpcByLocation\Westfall\SalmaSaldean.cs" />
+    <Compile Include="NpcByLocation\Westfall\VernaFurlbrow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scarlet\Scarlet.cs" />
+    <Compile Include="Scarlet\ScarletLoot.cs" />
+    <Compile Include="Summon\Summoned.cs" />
+    <Compile Include="Undead\Otherundead.cs" />
+    <Compile Include="Undead\OtherundeadLoot.cs" />
+    <Compile Include="Undead\Tsuzee_GordokSpirit.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Humanoids\1\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NpcByLocation\TeldRassil\GnarlpineAmbusher.cs_present" />
+    <None Include="NpcByLocation\TeldRassil\GnarlpineMystic.cs_present" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

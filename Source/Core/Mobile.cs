@@ -11319,7 +11319,7 @@ Console.WriteLine("Crash OnGetHit 4 in {0}.{1}", ( Triggers[ a ] as OnSpellHitTr
 					int lev = 0;
 					foreach( Member member in whoEarn.GroupMembers.Members )
 					{
-						int l = member.Char.Level;
+						int l = member.Character.Level;
 						if ( highest < l )
 						{
 							highest = l;
@@ -11330,16 +11330,16 @@ Console.WriteLine("Crash OnGetHit 4 in {0}.{1}", ( Triggers[ a ] as OnSpellHitTr
 					float max = (float)lev;
 					foreach( Member member in whoEarn.GroupMembers.Members )
 					{
-						float winxp = ( rxp * (float)( member.Char.Level * member.Char.Level * member.Char.Level ) ) / max;
+						float winxp = ( rxp * (float)( member.Character.Level * member.Character.Level * member.Character.Level ) ) / max;
 						x = (int)winxp;
 						int offset = 4;
-						Converter.ToBytes( member.Char.Guid, tempBuff, ref offset );
+						Converter.ToBytes( member.Character.Guid, tempBuff, ref offset );
 						Converter.ToBytes( x, tempBuff, ref offset );
 						Converter.ToBytes( (byte)0, tempBuff, ref offset );
 						Converter.ToBytes( 0x32, tempBuff, ref offset );
 						Converter.ToBytes( (float)1.0f, tempBuff, ref offset );
-						member.Char.Send( OpCodes.SMSG_LOG_XPGAIN, tempBuff, offset );
-						member.Char.EarnXP( x );
+						member.Character.Send( OpCodes.SMSG_LOG_XPGAIN, tempBuff, offset );
+						member.Character.EarnXP( x );
 					}
 				}
 				else

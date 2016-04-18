@@ -1600,8 +1600,8 @@ namespace Server
 						am /= GroupMembers.Members.Count;
 						foreach( Member member in GroupMembers.Members )
 						{
-							member.Char.Copper += (uint)am;
-							member.Char.SendSmallUpdate( new int[] { (int)UpdateFields.PLAYER_FIELD_COINAGE }, new object[] { member.Char.Copper } );
+							member.Character.Copper += (uint)am;
+							member.Character.SendSmallUpdate( new int[] { (int)UpdateFields.PLAYER_FIELD_COINAGE }, new object[] { member.Character.Copper } );
 						}
 					}
 					else
@@ -6653,7 +6653,7 @@ namespace Server
 					{
 						foreach( Member member in GroupMembers.Members )
 						{
-							SendMessageTo( member.Char, chat, txt, langue );
+							SendMessageTo( member.Character, chat, txt, langue );
 						}
 					}
 						break;

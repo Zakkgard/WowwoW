@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{610C5DF5-FB85-4753-84F0-EC91FFF3A32F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Quests</RootNamespace>
+    <AssemblyName>Quests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Aliance\Elwynn Forest\BerniceStonefield.cs" />
+    <Compile Include="Aliance\Elwynn Forest\BillyMaclure.cs" />
+    <Compile Include="Aliance\Elwynn Forest\DeputyRainer.cs" />
+    <Compile Include="Aliance\Elwynn Forest\DeputyWillem.cs" />
+    <Compile Include="Aliance\Elwynn Forest\EaganPeltskinner.cs" />
+    <Compile Include="Aliance\Elwynn Forest\FalkhaanIsenstrider.cs" />
+    <Compile Include="Aliance\Elwynn Forest\GerardTiller.cs" />
+    <Compile Include="Aliance\Elwynn Forest\GrammaStonefield.cs" />
+    <Compile Include="Aliance\Elwynn Forest\guardthomas.cs" />
+    <Compile Include="Aliance\Elwynn Forest\MarshalDughan.cs" />
+    <Compile Include="Aliance\Elwynn Forest\MarshalMcBride.cs" />
+    <Compile Include="Aliance\Elwynn Forest\MaStonefield.cs" />
+    <Compile Include="Aliance\Elwynn Forest\MaybellMaclure.cs" />
+    <Compile Include="Aliance\Elwynn Forest\MillyOsworth.cs" />
+    <Compile Include="Aliance\Elwynn Forest\RemyTwoTimes.cs" />
+    <Compile Include="Aliance\Elwynn Forest\SaraTimberlain.cs" />
+    <Compile Include="Aliance\Elwynn Forest\SmithArgus.cs" />
+    <Compile Include="Aliance\Elwynn Forest\SupervisorRaelen.cs" />
+    <Compile Include="Aliance\Elwynn Forest\TommyJoeStonefield.cs" />
+    <Compile Include="Aliance\Elwynn Forest\WilliamPestle.cs" />
+    <Compile Include="Aliance\Stormwind\DungarLongdrink.cs" />
+    <Compile Include="Aliance\Stormwind\GrimandElmore.cs" />
+    <Compile Include="Aliance\Stormwind\OsricStrang.cs" />
+    <Compile Include="Aliance\Teldrassil\ArchDruidFandralStaghelm.cs" />
+    <Compile Include="Aliance\Teldrassil\AthridasBearmantle.cs" />
+    <Compile Include="Aliance\Teldrassil\BlackmosstheFetid.cs" />
+    <Compile Include="Aliance\Teldrassil\ConservatorIlthalaine.cs" />
+    <Compile Include="Aliance\Teldrassil\CorithrasMoonrage.cs" />
+    <Compile Include="Aliance\Teldrassil\Dazalar.cs" />
+    <Compile Include="Aliance\Teldrassil\Denalan.cs" />
+    <Compile Include="Aliance\Teldrassil\DiraniaShilvershine.cs" />
+    <Compile Include="Aliance\Teldrassil\Elanaria.cs" />
+    <Compile Include="Aliance\Teldrassil\ErelasAmbersky.cs" />
+    <Compile Include="Aliance\Teldrassil\ErionShadewhisper.cs" />
+    <Compile Include="Aliance\Teldrassil\GaerolasTalvethern.cs" />
+    <Compile Include="Aliance\Teldrassil\GilshalanWindwalker.cs" />
+    <Compile Include="Aliance\Teldrassil\Iverron.cs" />
+    <Compile Include="Aliance\Teldrassil\JannokBreezesong.cs" />
+    <Compile Include="Aliance\Teldrassil\Jocaste.cs" />
+    <Compile Include="Aliance\Teldrassil\KyraWindblade.cs" />
+    <Compile Include="Aliance\Teldrassil\LaurnaMorninglight.cs" />
+    <Compile Include="Aliance\Teldrassil\Lucius.cs" />
+    <Compile Include="Aliance\Teldrassil\MelitharStaghelm.cs" />
+    <Compile Include="Aliance\Teldrassil\Mist.cs" />
+    <Compile Include="Aliance\Teldrassil\MoonPriestessAmara.cs" />
+    <Compile Include="Aliance\Teldrassil\ObenRageclaw.cs" />
+    <Compile Include="Aliance\Teldrassil\Porthannius.cs" />
+    <Compile Include="Aliance\Teldrassil\PriestessAlathea.cs" />
+    <Compile Include="Aliance\Teldrassil\Ranshalla.cs" />
+    <Compile Include="Aliance\Teldrassil\RellianGreenspyre.cs" />
+    <Compile Include="Aliance\Teldrassil\RenzikTheShiv.cs" />
+    <Compile Include="Aliance\Teldrassil\SentinelAryniaCloudsbreak.cs" />
+    <Compile Include="Aliance\Teldrassil\SproutedItemQuest.cs" />
+    <Compile Include="Aliance\Teldrassil\SyralBladeleaf.cs" />
+    <Compile Include="Aliance\Teldrassil\Syurna.cs" />
+    <Compile Include="Aliance\Teldrassil\TallonkaiSwiftroot.cs" />
+    <Compile Include="Aliance\Teldrassil\Tarindrella.cs" />
+    <Compile Include="Aliance\Teldrassil\TenaronStormgrip.cs" />
+    <Compile Include="Aliance\Teldrassil\VerdantSigil.cs" />
+    <Compile Include="Aliance\Teldrassil\welcome.cs" />
+    <Compile Include="Aliance\Teldrassil\Zarrin.cs" />
+    <Compile Include="Aliance\Teldrassil\ZennFoulhoof.cs" />
+    <Compile Include="Aliance\Westfall\CaptainDanuvin.cs" />
+    <Compile Include="Aliance\Westfall\CaptainGrayson.cs" />
+    <Compile Include="Aliance\Westfall\QuartermasterLewis.cs" />
+    <Compile Include="Aliance\Westfall\SalmaSaldean.cs" />
+    <Compile Include="Aliance\Westfall\ScoutGaliaan.cs" />
+    <Compile Include="Aliance\Westfall\Thor.cs" />
+    <Compile Include="Aliance\Westfall\VernaFurlbrow.cs" />
+    <Compile Include="Horde\Tirisfal Glades\ApothecaryJohaan.cs" />
+    <Compile Include="Horde\Tirisfal Glades\DeathguardSaltain.cs" />
+    <Compile Include="Horde\Tirisfal Glades\DeathguardSimmer.cs" />
+    <Compile Include="Horde\Tirisfal Glades\ExecutorArren.cs" />
+    <Compile Include="Horde\Tirisfal Glades\ShadowPriestSarvis.cs" />
+    <Compile Include="Horde\Tirisfal Glades\UndertakerMordo.cs" />
+    <Compile Include="ImportedQuests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QuestConverter7.4.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="QuestErrors.txt" />
+    <Content Include="questlist.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

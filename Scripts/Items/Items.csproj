@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D359AA6A-CB6B-418F-819E-F43A2E938089}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Items</RootNamespace>
+    <AssemblyName>Items</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Armor\Cloth\ClothBack.cs" />
+    <Compile Include="Armor\Cloth\ClothChest.cs" />
+    <Compile Include="Armor\Cloth\ClothFeet.cs" />
+    <Compile Include="Armor\Cloth\ClothHands.cs" />
+    <Compile Include="Armor\Cloth\ClothHead.cs" />
+    <Compile Include="Armor\Cloth\ClothLegs.cs" />
+    <Compile Include="Armor\Cloth\ClothRobe.cs" />
+    <Compile Include="Armor\Cloth\ClothShoulder.cs" />
+    <Compile Include="Armor\Cloth\ClothWaist.cs" />
+    <Compile Include="Armor\Cloth\ClothWrist.cs" />
+    <Compile Include="Armor\Leather\LeatherChest.cs" />
+    <Compile Include="Armor\Leather\LeatherFeet.cs" />
+    <Compile Include="Armor\Leather\LeatherHands.cs" />
+    <Compile Include="Armor\Leather\LeatherHead.cs" />
+    <Compile Include="Armor\Leather\LeatherLegs.cs" />
+    <Compile Include="Armor\Leather\LeatherRobe.cs" />
+    <Compile Include="Armor\Leather\LeatherShoulder.cs" />
+    <Compile Include="Armor\Leather\LeatherWaist.cs" />
+    <Compile Include="Armor\Leather\LeatherWrist.cs" />
+    <Compile Include="Armor\Mail\MailChest.cs" />
+    <Compile Include="Armor\Mail\MailFeet.cs" />
+    <Compile Include="Armor\Mail\MailHands.cs" />
+    <Compile Include="Armor\Mail\MailHead.cs" />
+    <Compile Include="Armor\Mail\MailLegs.cs" />
+    <Compile Include="Armor\Mail\MailRobe.cs" />
+    <Compile Include="Armor\Mail\MailShoulder.cs" />
+    <Compile Include="Armor\Mail\MailWaist.cs" />
+    <Compile Include="Armor\Mail\MailWrist.cs" />
+    <Compile Include="Armor\Plate\PlateChest.cs" />
+    <Compile Include="Armor\Plate\PlateFeet.cs" />
+    <Compile Include="Armor\Plate\PlateHands.cs" />
+    <Compile Include="Armor\Plate\PlateHead.cs" />
+    <Compile Include="Armor\Plate\PlateLegs.cs" />
+    <Compile Include="Armor\Plate\PlateShoulder.cs" />
+    <Compile Include="Armor\Plate\PlateWaist.cs" />
+    <Compile Include="Armor\Plate\PlateWrist.cs" />
+    <Compile Include="Armor\Shields\Shield.cs" />
+    <Compile Include="Consumable\Consumable.cs" />
+    <Compile Include="Container\AmmoPouch.cs" />
+    <Compile Include="Container\Container.cs" />
+    <Compile Include="Generic\Feet.cs" />
+    <Compile Include="Generic\Shirt.cs" />
+    <Compile Include="Generic\Tabard.cs" />
+    <Compile Include="Key\Keys.cs" />
+    <Compile Include="Miscellaneous\MiscellaneousItems.cs" />
+    <Compile Include="Miscellaneous\MiscellaneousMagicItems.cs" />
+    <Compile Include="Permanent\Permanent.cs" />
+    <Compile Include="Projectile\Arrow.cs" />
+    <Compile Include="Projectile\Bullet.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quest\QuestItems.cs" />
+    <Compile Include="Quiver\Quiver.cs" />
+    <Compile Include="Reagent\Reagent.cs" />
+    <Compile Include="Recipes\Alchemy.cs" />
+    <Compile Include="Recipes\BlackSmithing.cs" />
+    <Compile Include="Recipes\Books.cs" />
+    <Compile Include="Recipes\Cooking.cs" />
+    <Compile Include="Recipes\Enchanting.cs" />
+    <Compile Include="Recipes\Engineering.cs" />
+    <Compile Include="Recipes\FirstAid.cs" />
+    <Compile Include="Recipes\Fishing.cs" />
+    <Compile Include="Recipes\LeatherWorking.cs" />
+    <Compile Include="Recipes\Tailoring.cs" />
+    <Compile Include="TradeGoods\Devices.cs" />
+    <Compile Include="TradeGoods\Explosives.cs" />
+    <Compile Include="TradeGoods\Parts.cs" />
+    <Compile Include="TradeGoods\TradeGoods.cs" />
+    <Compile Include="Weapon\Axe.cs" />
+    <Compile Include="Weapon\Bow.cs" />
+    <Compile Include="Weapon\CrossBow.cs" />
+    <Compile Include="Weapon\Dagger.cs" />
+    <Compile Include="Weapon\FishingPole.cs" />
+    <Compile Include="Weapon\FistWeapon.cs" />
+    <Compile Include="Weapon\Gun.cs" />
+    <Compile Include="Weapon\Mace.cs" />
+    <Compile Include="Weapon\PoleArm.cs" />
+    <Compile Include="Weapon\Staff.cs" />
+    <Compile Include="Weapon\Sword.cs" />
+    <Compile Include="Weapon\Thrown.cs" />
+    <Compile Include="Weapon\TwoHandedAxe.cs" />
+    <Compile Include="Weapon\TwoHandedMace.cs" />
+    <Compile Include="Weapon\TwoHandSword.cs" />
+    <Compile Include="Weapon\Wand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\WowwoW.csproj">
+      <Project>{97DE59C8-1DA9-43B7-A07F-F9FDB8678258}</Project>
+      <Name>WowwoW</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

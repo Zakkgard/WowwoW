@@ -1,18 +1,14 @@
-using System;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.IO;
-
-
 namespace Server
 {
+    using System;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
+    using System.IO;
 
-
-	public class TcpIPSocketClient  : TcpClient
+    public class TcpIPSocketClient : TcpClient
 	{
-        
-		private int  portNum = 10116 ;        
+		private int portNum = 10116;        
 		string m_Ip;
 		bool m_Ready;
 		NetworkStream networkStream;
@@ -37,7 +33,7 @@ namespace Server
 			m_Ready = false;
 			m_Ip = ip;
 
-			ThreadStart myThreadDelegate = new ThreadStart( ConnectThread );
+			ThreadStart myThreadDelegate = new ThreadStart(ConnectThread);
 			m_Thread = new Thread(myThreadDelegate);
 			m_Thread.Start();
 		}
@@ -55,12 +51,12 @@ namespace Server
 			get { return null; }
 		}
 
-		public virtual byte [] ProcessDataReceived( byte [] data, ClientHandler ch, int len )
+		public virtual byte[] ProcessDataReceived(byte [] data, ClientHandler ch, int len)
 		{
 			return null;	
 		}
 
-		public virtual string ProcessObjectReceived( MemoryStream stream, string classname )
+		public virtual string ProcessObjectReceived(MemoryStream stream, string classname)
 		{
 			return "";	
 		}

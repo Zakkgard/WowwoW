@@ -5,81 +5,6 @@ using System.Reflection;
 
 namespace Server.Items
 {
-	#region ENUMS
-	public enum Attributes
-	{
-		Strenght = 4,
-		Agility = 3,
-		Iq = 6,
-		Spirit = 5,
-		Stamina = 7,
-		Mana = 0,
-		Health = 1
-	}
-	public enum InventoryTypes : int 
-	{
-		None			= 0,
-		Head			= 1,
-		Neck			= 2,
-		Shoulder		= 3,
-		Shirt			= 4,
-		Chest			= 5,
-		Waist			= 6,
-		Legs			= 7,
-		Feet			= 8,
-		Wrist			= 9,
-		Hands			= 10,
-		Finger			= 11,
-		Trinket1		= 12,
-		MainGauche		= 13,
-		Shield			= 14,
-		Ranged			= 15,
-		Back			= 16,
-		TwoHanded		= 17,
-		Junk			= 18,
-		Bag				= 18,
-		Tabard			= 19,
-		Robe			= 20,
-		OneHand			= 21,
-		OffHand			= 22,
-		HeldInHand		= 23,
-		Projectile		= 24,
-		Thrown			= 25,
-		RangeRight		= 26
-	};
-	public enum Slots : int
-	{
-		None		= -1,
-		Head		=	0,
-		Neck		=	1,
-		Shoulders	=	2,
-		Shirt		=	3,
-		Chest		=	4,
-		Waist		=	5,
-		Legs		=	6,
-		Feet		=	7,
-		Wrists		=	8,
-		Hands		=	9,
-		FingerLeft	=	10,
-		FingerRight	=	11,
-		TrinketLeft	=	12,
-		TrinketRight=	13,
-		Back		=	14,
-		MainHand	=	15,
-		OffHand		=	16,
-		Ranged		=	17,
-		Tabard		=	18,
-		Bag1		=	19,
-		Bag2		=	20,
-		Bag3		=	21,
-		Bag4		=	22,
-		Bag5		=	23
-	}
-
-	#endregion
-	/// <summary>
-	/// Description of Item.	
-	/// </summary>
 	public class Item : Object
 	{
 		string name;
@@ -145,91 +70,73 @@ namespace Server.Items
 		//	Partie dynamique
 		ConstructorInfo quickConstructor;
 
-		public class ItemDamage
-		{
-			float minDamage;
-			float maxDamage;
+        public class SpecialAbility
+        {
+            int id;
+            int trigger;
+            int charges;
+            int cooldown;
+            int category;
+            int categoryCooldown;
+            Aura aura;
+            float proba;
 
-			public ItemDamage()
-			{
-			}
-			public ItemDamage( float min, float max )
-			{
-				minDamage = min;
-				maxDamage = max;
-			}
-			public float MinDamage
-			{
-				get { return minDamage; }
-			}
-			public float MaxDamage
-			{
-				get { return maxDamage; }
-			}
-		}
-		public class SpecialAbility
-		{
-			int id;
-			int trigger;
-			int charges;
-			int cooldown;
-			int category;
-			int categoryCooldown;
-			Aura aura;
-			float proba;
+            public SpecialAbility(int p1, int p2, int p3, int p4, int p5, int p6, float prob)
+            {
+                id = p1;
+                trigger = p2;
+                charges = p3;
+                cooldown = p4;
+                category = p5;
+                categoryCooldown = p6;
+                proba = prob;
+            }
 
-			public SpecialAbility( int p1, int p2, int p3, int p4, int p5, int p6, float prob )
-			{
-				id = p1;
-				trigger = p2;
-				charges = p3;
-				cooldown = p4;
-				category = p5;
-				categoryCooldown = p6;
-				proba = prob;
-			}
-			public SpecialAbility( int p1, int p2, int p3, int p4, int p5, int p6 )
-			{
-				id = p1;
-				trigger = p2;
-				charges = p3;
-				cooldown = p4;
-				category = p5;
-				categoryCooldown = p6;
-				proba = 1f;
-			}
-			public void PrepareData( byte []data, ref int offset )
-			{
-				Converter.ToBytes( id, data, ref offset );
-				Converter.ToBytes( trigger, data, ref offset );
-				Converter.ToBytes( charges, data, ref offset );
-				Converter.ToBytes( cooldown, data, ref offset );
-				Converter.ToBytes( category, data, ref offset );
-				Converter.ToBytes( categoryCooldown, data, ref offset );
-			}
-			public float Proba
-			{
-				get { return proba; }
-			}
-			public int Trigger
-			{
-				get { return trigger; }
-			}
-			public BaseAbility Spell
-			{
-				get { return Abilities.abilities[ id ]; }
-			}
-			public Aura ActiveAura
-			{
-				get { return aura; }
-				set { aura = value; }
-			}
+            public SpecialAbility(int p1, int p2, int p3, int p4, int p5, int p6)
+            {
+                id = p1;
+                trigger = p2;
+                charges = p3;
+                cooldown = p4;
+                category = p5;
+                categoryCooldown = p6;
+                proba = 1f;
+            }
 
-		}
+            public void PrepareData(byte[] data, ref int offset)
+            {
+                Converter.ToBytes(id, data, ref offset);
+                Converter.ToBytes(trigger, data, ref offset);
+                Converter.ToBytes(charges, data, ref offset);
+                Converter.ToBytes(cooldown, data, ref offset);
+                Converter.ToBytes(category, data, ref offset);
+                Converter.ToBytes(categoryCooldown, data, ref offset);
+            }
 
+            public float Proba
+            {
+                get { return proba; }
+            }
 
-		#region ACCESSORS
-		public bool IsWeapon
+            public int Trigger
+            {
+                get { return trigger; }
+            }
+
+            public BaseAbility Spell
+            {
+                get { return Abilities.abilities[id]; }
+            }
+
+            public Aura ActiveAura
+            {
+                get { return aura; }
+                set { aura = value; }
+            }
+        }
+
+        #region ACCESSORS
+        public bool IsWeapon
 		{
 			get 
 			{
@@ -1013,43 +920,43 @@ Converter.ToBytes( 0, data, ref offset );
 			int nb = 0;
 			if ( strBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Strenght, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Strenght, data, ref offset );//	bonus stat
 				Converter.ToBytes( strBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( iqBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Iq, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Iq, data, ref offset );//	bonus stat
 				Converter.ToBytes( iqBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( staminaBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Stamina, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Stamina, data, ref offset );//	bonus stat
 				Converter.ToBytes( staminaBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( spiritBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Spirit, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Spirit, data, ref offset );//	bonus stat
 				Converter.ToBytes( spiritBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( agilityBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Agility, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Agility, data, ref offset );//	bonus stat
 				Converter.ToBytes( agilityBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( manaBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Mana, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Mana, data, ref offset );//	bonus stat
 				Converter.ToBytes( manaBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
 			if ( healthBonus != 0 )
 			{
-				Converter.ToBytes( (int)Attributes.Health, data, ref offset );//	bonus stat
+				Converter.ToBytes( (int)ItemAttributes.Health, data, ref offset );//	bonus stat
 				Converter.ToBytes( healthBonus, data, ref offset );//	bonus amount
 				nb++;
 			}
@@ -1169,66 +1076,5 @@ Converter.ToBytes( 0, data, ref offset );
 			}
 		}
 		#endregion
-	}
-
-	public class Money : Item
-	{
-		public Money() : base()
-		{
-		}
-	}
-
-	public class TestStationeryFake : Item
-	{
-		public TestStationeryFake() : base()
-		{
-			BuyPrice = 10;
-			SubClass = 0;
-			Material = -1;
-			Stackable = 10;
-			Model = 1069;
-			ObjectClass = 0;
-			Name = "Test Stationery";
-			AvailableClasses = 0x07FFF;
-			Quality = 1;
-			SellPrice = 2;
-			AvailableRaces = 0x01FF;
-			Id = 8164;
-		}
-	}
-
-	public class BlizzardStationeryFake : Item
-	{
-		public BlizzardStationeryFake() : base()
-		{
-			AvailableRaces = 0x07FFF;
-			SubClass = 0;
-			Material = -1;
-			PageMaterial = 1;
-			Stackable = 1;
-			Model = 30658;
-			ObjectClass = 0;
-			Name = "Blizzard Stationery";
-			AvailableClasses = 0x07FFF;
-			Quality = 1;
-			Id = 18154;
-		}
-	}
-	public class DefaultStationeryFake : Item
-	{
-		public DefaultStationeryFake() : base()
-		{
-			AvailableRaces = 0x01FF;
-			SubClass = 0;
-			Material = -1;
-			PageMaterial = 1;
-			Stackable = 1;
-			Model = 7798;
-			ObjectClass = 0;
-			Name = "Default Stationery";
-			AvailableClasses = 0x07FFF;
-			Quality = 1;
-			Id = 9311;
-		}
 	}
 }

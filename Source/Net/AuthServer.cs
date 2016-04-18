@@ -1,12 +1,3 @@
-/*
- * Created by SharpDevelop.
- * User: BIOSTAT26
- * Date: 22/08/2005
- * Time: 13:43
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-
 using System;
 using System.Collections;
 using System.Net;
@@ -14,10 +5,6 @@ using System.Net.Sockets;
 
 namespace Server
 {
-	//public delegate void RemoveClientDelegate( SockClient client );
-	/// <summary>
-	/// Description of SockServer.
-	/// </summary>
 	public class AuthServer : IDisposable
 	{
 		string ip;
@@ -44,68 +31,72 @@ namespace Server
 			address = lep.Address;
 			Start();
 		}
+
 		public bool Start()
 		{
 			try 
 			{
-				listenSocket = new Socket( addressFamily, SocketType.Stream, ProtocolType.Tcp );
+				listenSocket = new Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp);
 				listenSocket.Bind( new IPEndPoint( IPAddress.Any, port ) );
-				Console.WriteLine("Listen on port {0}, IP {1}", port, address.ToString() );
-				listenSocket.Listen( 1000 );
-				listenSocket.BeginAccept( new AsyncCallback( this.OnAccept ), listenSocket );				
+				Console.WriteLine("Listen on port {0}, IP {1}", port, address.ToString());
+				listenSocket.Listen(1000);
+				listenSocket.BeginAccept( new AsyncCallback(this.OnAccept), listenSocket);				
 			} 
-			catch( Exception e )
+			catch(Exception e)
 			{
-				Console.WriteLine("Failled to list on port {0}\n{1}", port, e.Message );
+				Console.WriteLine("Failled to list on port {0}\n{1}", port, e.Message);
 				listenSocket = null;
 				return false;
 			}		
 			return true;
 		}
-		public virtual void OnAccept( IAsyncResult ar ) 
+
+		public virtual void OnAccept(IAsyncResult result) 
 		{
 			try 
 			{	
-				Socket newSocket = listenSocket.EndAccept( ar );
+				Socket newSocket = listenSocket.EndAccept(result);
 				
-				if ( newSocket != null ) 
+				if (newSocket != null) 
 				{
-					ClientConnection newClient = new ClientConnection( newSocket, new RemoveClientDelegate( this.RemoveClient ) );
-					clients.Add( newClient );
+					ClientConnection newClient = new ClientConnection(newSocket, new RemoveClientDelegate(this.RemoveClient));
+					clients.Add(newClient);
 					newClient.Start();
 				}
 			} 
 			catch {}
 			try 
 			{
-				listenSocket.BeginAccept( new AsyncCallback( this.OnAccept ), listenSocket );
+				listenSocket.BeginAccept(new AsyncCallback(this.OnAccept), listenSocket);
 			} 
 			catch
 			{
 				Dispose();
 			}
-		}		
+		}
+        		
 		public void RemoveClient( SockClient client )
 		{
 			clients.Remove( client );			
 		}
 		
-		//	public abstract void OnAccept( IAsyncResult ar );
 		public void Dispose() 
 		{
-			while ( clients.Count > 0) 
+			while (clients.Count > 0) 
 			{
-				(( SockClient )clients[0]).Dispose();
+                var client = clients[0] as SockClient;
+                if (client != null)
+                {
+                    client.Dispose();
+                }
 			}
-			try 
-			{
-				listenSocket.Shutdown(SocketShutdown.Both);
-			} 
-			catch
-			{}
-			if ( listenSocket != null )
-				listenSocket.Close();
-			
+
+            listenSocket.Shutdown(SocketShutdown.Both);
+
+            if (listenSocket != null)
+            {
+                listenSocket.Close();
+            }
 		}		
 	}
 }

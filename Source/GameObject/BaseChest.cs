@@ -5,9 +5,6 @@ using Server.Items;
 
 namespace Server
 {
-	/// <summary>
-	/// Summary description for BaseChest.
-	/// </summary>
 	public class BaseChest : GameObject
 	{
 		int lootMoney;

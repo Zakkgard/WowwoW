@@ -4,11 +4,11 @@ using System.Reflection;
 
 namespace Server
 {
-
 	public class HexaPoint
 	{
 		public int x;
 		public int y;
+
 		public HexaPoint()
 		{
 		}
