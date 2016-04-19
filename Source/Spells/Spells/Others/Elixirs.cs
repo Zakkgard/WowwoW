@@ -1,11 +1,10 @@
-using Server;
-using HelperTools;
-
 namespace Server
 {
-	public class Elixirs
+    using System.Reflection;
+
+    public class Elixirs
 	{
-		public static void OnUseElixirOfAgility( BaseAbility ba, Mobile c )
+		public static void OnUseElixirOfAgility( BaseAbility ba, Module c )
 		{
 			AuraEffect st = (AuraEffect)ba;
 			Aura aura = new Aura();

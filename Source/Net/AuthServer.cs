@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
-using System.Net;
-using System.Net.Sockets;
-
 namespace Server
 {
-	public class AuthServer : IDisposable
+    using System;
+    using System.Collections;
+    using System.Net;
+    using System.Net.Sockets;
+
+    public class AuthServer : IDisposable
 	{
 		string ip;
 		int port;
