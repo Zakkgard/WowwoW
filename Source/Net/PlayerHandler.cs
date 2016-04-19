@@ -13,7 +13,6 @@ namespace Server
         bool firstPacket = true;
         Account playerAccount;
         Character loggedChar;
-        //UpdateTimer updateTimer;
         bool needEncode = false;
 
         #region MSG_OPCODES
@@ -1163,6 +1162,6 @@ namespace Server
                 playerAccount.Loggout(loggedChar.Guid);
         }
 
-        
+
     }
 }

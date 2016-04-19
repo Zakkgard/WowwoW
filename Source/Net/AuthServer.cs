@@ -21,7 +21,7 @@ namespace Server
 			listenSocket.Close();
 		}
 		
-		public AuthServer( string i, int pt )
+		public AuthServer(string i, int pt)
 		{			
 			ip = i;
 			port = pt;

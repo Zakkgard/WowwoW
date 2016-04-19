@@ -84,6 +84,9 @@
     <Compile Include="Doc.cs" />
     <Compile Include="FishingZones.cs" />
     <Compile Include="MainConsole.cs" />
+    <Compile Include="Net\Authentication\AuthenticationCmd.cs" />
+    <Compile Include="Net\Authentication\AuthenticationCodes.cs" />
+    <Compile Include="Net\Authentication\AuthenticationResults.cs" />
     <Compile Include="Net\ClientHandler.cs" />
     <Compile Include="Net\ClientService.cs" />
     <Compile Include="Net\Packet.cs" />

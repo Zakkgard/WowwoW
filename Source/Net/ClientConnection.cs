@@ -7,360 +7,342 @@ namespace Server
     using HelperTools;
 
     public class ClientConnection : SockClient
-	{
-		public ClientConnection(Socket sock, RemoveClientDelegate rcd) 
+    {
+        public ClientConnection(Socket sock, RemoveClientDelegate rcd)
             : base(sock, rcd)
-		{
-		}
+        {
+        }
 
-		public static int s1 = 1;
+        public static int s1 = 1;
 
-		public static byte[] Reverse(byte[] from)
-		{
-			byte[] res = new byte[from.Length];
-			int i = 0;
-			for(int t = from.Length - 1; t >= 0; t--)
+        public static byte[] Reverse(byte[] from)
+        {
+            byte[] res = new byte[from.Length];
+            int i = 0;
+            for (int t = from.Length - 1; t >= 0; t--)
             {
                 res[i++] = from[t];
             }
 
-			return res;
-		}
+            return res;
+        }
 
-		public static byte[] Concat( byte []a, byte []b )
-		{
-			byte []res = new byte[ a.Length + b.Length ];
-			for(int t = 0;t < a.Length;t++ )
-				res[ t ] = a[ t ];
-			for(int t = 0;t < b.Length;t++ )
-				res[ t + a.Length ] = b[ t ];
-			return res;
-		}
+        public static byte[] Concat(byte[] a, byte[] b)
+        {
+            byte[] res = new byte[a.Length + b.Length];
+            for (int t = 0; t < a.Length; t++)
+                res[t] = a[t];
+            for (int t = 0; t < b.Length; t++)
+                res[t + a.Length] = b[t];
+            return res;
+        }
 
-		BigInteger B;
-		static byte[] N = { 0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B, 
-							  0xBD, 0xAD, 0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53, 
-							  0x08, 0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F, 
-							  0xAB, 0x3C, 0x82, 0x87, 0x2A, 0x3E, 0x9B, 0xB7 };
-		static byte[] rN = Reverse(N);
+        BigInteger B;
+        static byte[] N = { 0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B,
+                              0xBD, 0xAD, 0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53,
+                              0x08, 0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F,
+                              0xAB, 0x3C, 0x82, 0x87, 0x2A, 0x3E, 0x9B, 0xB7 };
+        static byte[] rN = Reverse(N);
 
-		byte[] salt = new byte[32];
-		BigInteger v;
-		byte[] b = new byte[20];	
-		byte[] rb;
-		byte[] userName;
-		BigInteger K;
-		static Random rand = new Random();
-		//static 
-		Account myAccount;
+        byte[] salt = new byte[32];
+        BigInteger v;
+        byte[] b = new byte[20];
+        byte[] rb;
+        byte[] userName;
+        BigInteger K;
+        static Random rand = new Random();
+        //static 
+        Account myAccount;
 
-		public static Hashtable tryLoggin = new Hashtable();
+        public static Hashtable tryLoggin = new Hashtable();
 
-		public override byte[] ProcessDataReceived(byte[] data, int length)
-		{
-		//	Console.WriteLine("Rec {0}", data[ 0 ] );
-		//	HexViewer.View( data, 0, length );
-			int t;
-            Console.WriteLine("Received: " + data[0]);
-			switch(data[0])
-			{
-				case 0x00://	Logon challenge	
-					/*foreach( Account acc in World.allAccounts )
-						if ( acc.Ip != null && 
-							ch.IP.Address == acc.Ip.Address && 
-							//ch.Port == acc.Port &&
-							(bool)tryLoggin[ ch.IP.Address.ToString() ] )
-						{
-							Console.WriteLine("wait!!!");
-							return new byte[] { 0, 3, 0xEE, 0x1, 0x19 };
-						}*/
-				//	Console.WriteLine( "Logon challenge" );
-					int clientVersion = ( ( (int)data[ 11 ] ) * 256  )+ data[ 12 ];
-					byte len = data[ 33 ];
-					userName = new byte[ len ];
-					//Console.Write( "User : " );
+        public override byte[] ProcessDataReceived(byte[] data, int length)
+        {
+            int t;
+            Console.WriteLine("Received: " + Enum.ToObject(typeof(AuthenticationCodes), data[0]).ToString());
+            switch (data[0])
+            {
+                case (byte)AuthenticationCodes.CMD_AUTH_LOGON_CHALLENGE:
+                    int clientVersion = (((int)data[11]) * 256) + data[12];
+                    byte len = data[33];
+                    userName = new byte[len];
 
-					string usern = "";
-					for( t = 0;t < len;t++ )
-					{
-						userName[ t ] = data[ 34 + t ];
-						usern+= "" + (char)data[ 34 + t ];
-					//	Console.Write( "{0}", "" + ((char)userName[ t ] ).ToString() );
-					}
-				//	Console.WriteLine( "" );
-					
-					myAccount = World.allAccounts.FindByUserName( usern );
-					if ( World.FreeForAll )
-					{
-						if ( myAccount == null )
-						{
-							World.allAccounts.Add( myAccount = new Account( usern, usern ) );
-						}
-					}
-					if ( myAccount == null )
-						return new byte[] { 0x1, 0x4 };
-					
-					if ( myAccount.SelectedChar != null )
-					{
-					//	Console.WriteLine("Already loggin");
-						return new byte[] { 1, 0x6 };
-						 // Already logged in
-					}
-					
-					SHA1 sha = new SHA1CryptoServiceProvider();
+                    string usern = "";
+                    for (t = 0; t < len; t++)
+                    {
+                        userName[t] = data[34 + t];
+                        usern += "" + (char)data[34 + t];
+                    }
 
-					string pass = ":" + myAccount.Password.ToUpper();
-					char []passc = pass.ToCharArray();
-					byte []passb = new byte[ passc.Length ];
-					int ti = 0;
-					foreach( char c in passc )
-						passb[ ti++ ] = (byte)c;
-					byte []user = Concat( userName, passb );
-					byte []hash = sha.ComputeHash( user, 0 , user.Length );
-					byte []res = new Byte[ hash.Length + salt.Length ];
-					t = 0;
-					rand.NextBytes( salt );
-					foreach( byte s in salt )
-						res[ t++ ] = s;
-					foreach( byte s in hash )
-						res[ t++ ] = s;
-					byte []hash2 = sha.ComputeHash( res, 0, res.Length );
-					byte []x = Reverse( hash2 );
+                    myAccount = World.allAccounts.FindByUserName(usern);
+                    
+                    if (myAccount == null)
+                    {
+                        Console.WriteLine("Sent: WOW_FAIL_SUSPENDED");
+                        return new byte[] { (byte)AuthenticationResults.WOW_FAIL_INCORRECT_PASSWORD };
+                    }
 
-					rN = Reverse( N );
-					rand.NextBytes( b );
-					rb = Reverse( b );
-					
-				
-					BigInteger bi = new BigInteger( x );
-					BigInteger bi2 = new BigInteger( rN );
-					BigInteger g = new BigInteger( new byte[] { 7 } );
-					v = g.modPow( bi, bi2 );
-					
-					K = new BigInteger( new Byte[] { 3 } );
-					BigInteger temp1 = K * v;
-					BigInteger temp2 = g.modPow( new BigInteger( rb ), new BigInteger( rN ) );
-					BigInteger temp3 = temp1 + temp2;
-					B = temp3 % new BigInteger( rN );
+                    if (myAccount.SelectedChar != null)
+                    {
+                        //	Console.WriteLine("Already loggin");
+                        return new byte[] { 1, 0x6 };
+                        // Already logged in
+                    }
 
-				/*	byte []ezfd= B.getBytes();
-					Console.WriteLine("B");
-					HexViewer.View( ezfd, 0, ezfd.Length );
-					BigInteger C = new BigInteger();
-					
-					Console.WriteLine("C/Rn {0}", temp3/new BigInteger( rN ) );*/
-					//Console.WriteLine("temp1 {0}",temp1.ToHexString());
-					//Console.WriteLine("temp2 {0}",temp2.ToHexString());
-					//Console.WriteLine("temp3 {0}",temp3.ToHexString());
-			/*		for(int ll = 0;ll < 6;ll++)
-					{
-						C = B;
-						C += new BigInteger( rN ) * ll;
-						C -= temp1;
-						Console.WriteLine("temp3 {0}",C.ToHexString());
-					}*/
+                    SHA1 sha = new SHA1CryptoServiceProvider();
 
-					byte []pack = new byte[ 118 ];
+                    string pass = ":" + myAccount.Password.ToUpper();
+                    char[] passc = pass.ToCharArray();
+                    byte[] passb = new byte[passc.Length];
+                    int ti = 0;
+                    foreach (char c in passc)
+                        passb[ti++] = (byte)c;
+                    byte[] user = Concat(userName, passb);
+                    byte[] hash = sha.ComputeHash(user, 0, user.Length);
+                    byte[] res = new Byte[hash.Length + salt.Length];
+                    t = 0;
+                    rand.NextBytes(salt);
+                    foreach (byte s in salt)
+                        res[t++] = s;
+                    foreach (byte s in hash)
+                        res[t++] = s;
+                    byte[] hash2 = sha.ComputeHash(res, 0, res.Length);
+                    byte[] x = Reverse(hash2);
+
+                    rN = Reverse(N);
+                    rand.NextBytes(b);
+                    rb = Reverse(b);
+
+
+                    BigInteger bi = new BigInteger(x);
+                    BigInteger bi2 = new BigInteger(rN);
+                    BigInteger g = new BigInteger(new byte[] { 7 });
+                    v = g.modPow(bi, bi2);
+
+                    K = new BigInteger(new Byte[] { 3 });
+                    BigInteger temp1 = K * v;
+                    BigInteger temp2 = g.modPow(new BigInteger(rb), new BigInteger(rN));
+                    BigInteger temp3 = temp1 + temp2;
+                    B = temp3 % new BigInteger(rN);
+
+                    /*	byte []ezfd= B.getBytes();
+                        Console.WriteLine("B");
+                        HexViewer.View( ezfd, 0, ezfd.Length );
+                        BigInteger C = new BigInteger();
+
+                        Console.WriteLine("C/Rn {0}", temp3/new BigInteger( rN ) );*/
+                    //Console.WriteLine("temp1 {0}",temp1.ToHexString());
+                    //Console.WriteLine("temp2 {0}",temp2.ToHexString());
+                    //Console.WriteLine("temp3 {0}",temp3.ToHexString());
+                    /*		for(int ll = 0;ll < 6;ll++)
+                            {
+                                C = B;
+                                C += new BigInteger( rN ) * ll;
+                                C -= temp1;
+                                Console.WriteLine("temp3 {0}",C.ToHexString());
+                            }*/
+
+                    byte[] pack = new byte[118];
                     //byte[] pack = new byte[119];
-					pack[ 0 ] = pack[ 1 ] = 0;
-					byte []tB = Reverse( B.getBytes() );
-					for( t = 0;t < tB.Length ;t++ )
-						pack[ 3 + t ] = tB[ t ];
-					pack[ 35 ] = 1;// g_length
-					pack[ 36 ] = 7;// g
-					pack[ 37 ] = 32;// n_len
-					for( t = 0;t < N.Length;t++ )
-						pack[ 38 + t ] = N[ t ];
-					for( t = 0;t < salt.Length ;t++ )
-						pack[ 70 + t ] = salt[ t ];
-					for( t = 0;t < 16;t++ )
-                    //for (t = 0; t < 17; t++)
-						pack[ 102 + t ] = 0;
+                    pack[0] = pack[1] = 0;
+                    byte[] tB = Reverse(B.getBytes());
+                    for (t = 0; t < tB.Length; t++)
+                        pack[3 + t] = tB[t];
+                    pack[35] = 1;// g_length
+                    pack[36] = 7;// g
+                    pack[37] = 32;// n_len
+                    for (t = 0; t < N.Length; t++)
+                        pack[38 + t] = N[t];
+                    for (t = 0; t < salt.Length; t++)
+                        pack[70 + t] = salt[t];
+                    for (t = 0; t < 16; t++)
+                        //for (t = 0; t < 17; t++)
+                        pack[102 + t] = 0;
 
-					return pack;
+                    return pack;
 
-				case 0x01://	Logon proof	
-				{					
-					//Console.WriteLine("Logon proof" );
-					byte []A = new byte[ 32 ];
-					for( t = 0;t < 32;t++ )
-					{
-						A[ t ] = data[ t + 1 ];
-					}
-					byte []kM1 = new byte[ 20 ];
-					for( t = 0;t < 20;t++ )
-					{
-						kM1[ t ] = data[ t + 1 + 32 ];
-					}
+                case 0x01://	Logon proof	
+                    {
+                        //Console.WriteLine("Logon proof" );
+                        byte[] A = new byte[32];
+                        for (t = 0; t < 32; t++)
+                        {
+                            A[t] = data[t + 1];
+                        }
+                        byte[] kM1 = new byte[20];
+                        for (t = 0; t < 20; t++)
+                        {
+                            kM1[t] = data[t + 1 + 32];
+                        }
 
-					//A = new byte[] { 0x23, 0x2f, 0xb1, 0xb8, 0x85, 0x29, 0x64, 0x3d, 0x95, 0xb8, 0xdc, 0xe7, 0x8f, 0x27, 0x50, 0xc7, 0x5b, 0x2d, 0xf3, 0x7a, 0xcb, 0xa8, 0x73, 0xeb, 0x31, 0x07, 0x38, 0x39, 0xed, 0xa0, 0x73, 0x8d };
-					byte []rA = Reverse( A );
-					//	B = new BigInteger( new byte[] { 0x64, 0x5d, 0x1f, 0x78, 0x97, 0x30, 0x73, 0x70, 0x1e, 0x12, 0xbc, 0x98, 0xaa, 0x38, 0xea, 0x99, 0xb4, 0xbc, 0x43, 0x5c, 0x32, 0xe8, 0x44, 0x7c, 0x73, 0xab, 0x07, 0x7a, 0xe4, 0xd7, 0x59, 0x64 } );
-					byte []AB = Concat( A, Reverse( B.getBytes() ) );
+                        //A = new byte[] { 0x23, 0x2f, 0xb1, 0xb8, 0x85, 0x29, 0x64, 0x3d, 0x95, 0xb8, 0xdc, 0xe7, 0x8f, 0x27, 0x50, 0xc7, 0x5b, 0x2d, 0xf3, 0x7a, 0xcb, 0xa8, 0x73, 0xeb, 0x31, 0x07, 0x38, 0x39, 0xed, 0xa0, 0x73, 0x8d };
+                        byte[] rA = Reverse(A);
+                        //	B = new BigInteger( new byte[] { 0x64, 0x5d, 0x1f, 0x78, 0x97, 0x30, 0x73, 0x70, 0x1e, 0x12, 0xbc, 0x98, 0xaa, 0x38, 0xea, 0x99, 0xb4, 0xbc, 0x43, 0x5c, 0x32, 0xe8, 0x44, 0x7c, 0x73, 0xab, 0x07, 0x7a, 0xe4, 0xd7, 0x59, 0x64 } );
+                        byte[] AB = Concat(A, Reverse(B.getBytes()));
 
-					SHA1 shaM1 = new SHA1CryptoServiceProvider();
-					byte []U = shaM1.ComputeHash( AB );		
-					//	U = new byte[] { 0x2f, 0x49, 0x69, 0xac, 0x9f, 0x38, 0x7f, 0xd6, 0x72, 0x23, 0x6f, 0x94, 0x91, 0xa5, 0x16, 0x77, 0x7c, 0xdd, 0xe1, 0xc1 };
-					byte []rU = Reverse( U );					
-					
-					temp1 = v.modPow( new BigInteger( rU ), new BigInteger( rN ) );
-					temp2 = temp1 * new BigInteger( rA );
-					temp3 = temp2.modPow( new BigInteger( rb ), new BigInteger( rN ) );
+                        SHA1 shaM1 = new SHA1CryptoServiceProvider();
+                        byte[] U = shaM1.ComputeHash(AB);
+                        //	U = new byte[] { 0x2f, 0x49, 0x69, 0xac, 0x9f, 0x38, 0x7f, 0xd6, 0x72, 0x23, 0x6f, 0x94, 0x91, 0xa5, 0x16, 0x77, 0x7c, 0xdd, 0xe1, 0xc1 };
+                        byte[] rU = Reverse(U);
 
-					byte []S1 = new byte[ 16 ];
-					byte []S2 = new byte[ 16 ];
-					byte []S = new byte[ 32 ];
-					byte []temp = temp3.getBytes();
-				/*	Console.WriteLine("temp");
-					HexViewer.View( temp, 0, temp.Length );
-					Console.WriteLine("temp1 {0}", temp1.ToHexString());
-					Console.WriteLine("temp2 {0}", temp2.ToHexString());
-					Console.WriteLine("temp3 {0}", temp3.ToHexString());*/
-					Buffer.BlockCopy( temp, 0, S, 0, temp.Length );
-					byte []rS = Reverse( S );
-				
-					
-					for( t = 0;t < 16;t++)
-					{
-						S1[ t ] = rS[ t * 2 ];
-						S2[ t ] = rS[ ( t * 2 ) + 1 ];
-					}
-					byte []hashS1 = shaM1.ComputeHash( S1 );
-					byte []hashS2 = shaM1.ComputeHash( S2 );
-					myAccount.SS_Hash = new byte[ hashS1.Length + hashS2.Length ];
-					for( t = 0;t < hashS1.Length ;t++ )
-					{
-						myAccount.SS_Hash[ t * 2 ] = hashS1[ t ];
-						myAccount.SS_Hash[ ( t * 2 ) + 1 ] = hashS2[ t ];
-					}
+                        temp1 = v.modPow(new BigInteger(rU), new BigInteger(rN));
+                        temp2 = temp1 * new BigInteger(rA);
+                        temp3 = temp2.modPow(new BigInteger(rb), new BigInteger(rN));
 
-					//	SS_Hash = new byte[] { 0x02, 0x61, 0xf4, 0xeb, 0x48, 0x91, 0xb6, 0x6a, 0x1a, 0x82, 0x6e, 0xb7, 0x79, 0x28, 0xd8, 0x64, 0xb7, 0xea, 0x14, 0x54, 0x38, 0xdb, 0x7c, 0xfd, 0x0d, 0x3d, 0x2f, 0xc0, 0x22, 0xce, 0xcc, 0x46, 0x83, 0x79, 0xf2, 0xc0, 0x87, 0x78, 0x7f, 0x14 };
+                        byte[] S1 = new byte[16];
+                        byte[] S2 = new byte[16];
+                        byte[] S = new byte[32];
+                        byte[] temp = temp3.getBytes();
+                        /*	Console.WriteLine("temp");
+                            HexViewer.View( temp, 0, temp.Length );
+                            Console.WriteLine("temp1 {0}", temp1.ToHexString());
+                            Console.WriteLine("temp2 {0}", temp2.ToHexString());
+                            Console.WriteLine("temp3 {0}", temp3.ToHexString());*/
+                        Buffer.BlockCopy(temp, 0, S, 0, temp.Length);
+                        byte[] rS = Reverse(S);
 
-					byte []NHash = shaM1.ComputeHash( N );
-					byte []GHash = shaM1.ComputeHash( new byte[]{ 7 } );
-					byte []userHash = shaM1.ComputeHash( userName );
-					byte []NG_Hash = new byte[ 20 ];
-					for( t = 0;t < 20;t++ )
-					{
-						NG_Hash[ t ] = (byte)( NHash[ t ] ^ GHash[ t ] );
-					}
-					byte []Temp = Concat( NG_Hash, userHash );
-					Temp = Concat( Temp, salt );
-					Temp = Concat( Temp, A );
-					Temp = Concat( Temp, B.getBytes() );
-					Temp = Concat( Temp, K.getBytes() );//SS_Hash );
 
-					byte []M1 = shaM1.ComputeHash( Temp );
+                        for (t = 0; t < 16; t++)
+                        {
+                            S1[t] = rS[t * 2];
+                            S2[t] = rS[(t * 2) + 1];
+                        }
+                        byte[] hashS1 = shaM1.ComputeHash(S1);
+                        byte[] hashS2 = shaM1.ComputeHash(S2);
+                        myAccount.SS_Hash = new byte[hashS1.Length + hashS2.Length];
+                        for (t = 0; t < hashS1.Length; t++)
+                        {
+                            myAccount.SS_Hash[t * 2] = hashS1[t];
+                            myAccount.SS_Hash[(t * 2) + 1] = hashS2[t];
+                        }
 
-					Temp = Concat( A, kM1 );
-					Temp = Concat( Temp, myAccount.SS_Hash );
+                        //	SS_Hash = new byte[] { 0x02, 0x61, 0xf4, 0xeb, 0x48, 0x91, 0xb6, 0x6a, 0x1a, 0x82, 0x6e, 0xb7, 0x79, 0x28, 0xd8, 0x64, 0xb7, 0xea, 0x14, 0x54, 0x38, 0xdb, 0x7c, 0xfd, 0x0d, 0x3d, 0x2f, 0xc0, 0x22, 0xce, 0xcc, 0x46, 0x83, 0x79, 0xf2, 0xc0, 0x87, 0x78, 0x7f, 0x14 };
 
-					byte []M2 = shaM1.ComputeHash( Temp );
+                        byte[] NHash = shaM1.ComputeHash(N);
+                        byte[] GHash = shaM1.ComputeHash(new byte[] { 7 });
+                        byte[] userHash = shaM1.ComputeHash(userName);
+                        byte[] NG_Hash = new byte[20];
+                        for (t = 0; t < 20; t++)
+                        {
+                            NG_Hash[t] = (byte)(NHash[t] ^ GHash[t]);
+                        }
+                        byte[] Temp = Concat(NG_Hash, userHash);
+                        Temp = Concat(Temp, salt);
+                        Temp = Concat(Temp, A);
+                        Temp = Concat(Temp, B.getBytes());
+                        Temp = Concat(Temp, K.getBytes());//SS_Hash );
 
-					byte []retur = new byte[ M2.Length + 4/*NG_Hash.Length */+ 2 ];
-					//	byte []retur = new byte[ M2.Length + NG_Hash.Length + 2 ];
-					retur[ 0 ] = 0x1;
-					retur[ 1 ] = 0x0;
-					for(t = 0;t < M2.Length;t++ )
-						retur[ t + 2 ] = M2[ t ];
+                        byte[] M1 = shaM1.ComputeHash(Temp);
 
-					//for(t = 0;t < NG_Hash.Length;t++ )
-					//	retur[ t + 2 + 20 ] = NG_Hash[ t ];
+                        Temp = Concat(A, kM1);
+                        Temp = Concat(Temp, myAccount.SS_Hash);
 
-					//	set the account properties
-					Console.WriteLine("Logon proof for {0},{1}", IP.ToString(), myAccount.Username );
-					myAccount.Ip = this.IP;
-					myAccount.Port = 0;
-					myAccount.K = myAccount.SS_Hash;					
+                        byte[] M2 = shaM1.ComputeHash(Temp);
 
-					return retur;
-				}
-				case 0x02://	Reconnect challenge
-				{
-				//	Console.WriteLine( "Reconnect challenge" );
+                        byte[] retur = new byte[M2.Length + 4/*NG_Hash.Length */+ 2];
+                        //	byte []retur = new byte[ M2.Length + NG_Hash.Length + 2 ];
+                        retur[0] = 0x1;
+                        retur[1] = 0x0;
+                        for (t = 0; t < M2.Length; t++)
+                            retur[t + 2] = M2[t];
 
-					byte []packRecoChallenge = new byte[ 34 ];
-					packRecoChallenge[ 0 ] = 0x02;
-					packRecoChallenge[ 1 ] = 0x00;
-					for( t = 0;t < 16 ;t++ )
-						packRecoChallenge[ 18 + t ] = 0;
-					return packRecoChallenge;
-				}
-				case 0x03://	Reconnect proof
-				//	Console.WriteLine( "Reconnect proof" );
-					return new byte[] { 0x03, 0x00 };
-				case 0x04://	Update server
-				//	Console.WriteLine( "Update server" );
-					break;
-				case 0x10://	Realm List					
-				//	Console.WriteLine( "Realm lList request" );
-					string ip = World.ServerIP;
-				/*	if ( base.theClientHandler.IP.ToString().StartsWith( "192.168.0" ) )
-					{
-						ip = "192.168.0.2";
-					}
-					else*/
-					if ( IP.ToString() == "127.0.0.1" )
-					{
-						ip = "127.0.0.1";
-					}
-					byte []retData = new byte[ 25 + ip.Length + World.ServerName.Length + World.ServerPort.ToString().Length ];
-				/*
-				byte []retData = new byte[ ]{   0x10, 45, 
-										  0x00, 0x00, 0x00, 0x00, 
-										  0x00, 
-										  0x01, 0x00, 0x00, 0x00, 
-										  0x00, 0x00, 
-										  (byte)'D', (byte)'r', (byte)' ', (byte)'N', (byte)'e',
-										  (byte)'x', (byte)'u', (byte)'s', 
-										  0x00, (byte)'1', (byte)'9', (byte)'2', (byte)'.', 
-										  (byte)'1', (byte)'6', (byte)'8', (byte)'.', 
-										  (byte)'0', (byte)'.', 
-										  (byte)'2', 
-										  0x3a, 0x38, 0x30, 0x38, 0x35, 
-										  0x00, 0x00, 0x00, 0x00, 
-										  0x00, 0x00, 
-										  0x01, 0x00, 
-										  0x02, 0x00 };*/
-					int offset = 0;
-					Converter.ToBytes( (byte)0x10, retData, ref offset );
-					Converter.ToBytes( (byte)43, retData, ref offset );
-					Converter.ToBytes( 1/*World.allConnectedChars.Count*/, retData, ref offset );
-					Converter.ToBytes( (byte)0, retData, ref offset );
-					Converter.ToBytes( 1, retData, ref offset );
-					Converter.ToBytes( (short)0, retData, ref offset );
-					Converter.ToBytes( World.ServerName, retData, ref offset );
-					Converter.ToBytes( (byte)0, retData, ref offset );
-					Converter.ToBytes( ip, retData, ref offset );
-					Converter.ToBytes( (byte)':', retData, ref offset );
-					Converter.ToBytes( World.ServerPort.ToString(), retData, ref offset );
-					Converter.ToBytes( (byte)0, retData, ref offset );
-					Converter.ToBytes( 0, retData, ref offset );
-				//	Converter.ToBytes( (short)0, retData, ref offset );//	cr erreir
-					//Converter.ToBytes( (short)1, retData, ref offset );
-					//Converter.ToBytes( (short)2, retData, ref offset );
-					
-					Converter.ToBytes( (short)World.allConnectedChars.Count, retData, ref offset );
-					Converter.ToBytes( (byte)0, retData, ref offset );
-					Converter.ToBytes( (short)1, retData, ref offset );
-					int atlen = 1;
-					offset -= 3;
-					Converter.ToBytes( offset, retData, ref atlen );
-					Console.WriteLine("Connected player(s) {0}", World.allConnectedChars.Count );
-				/*	if ( World.allConnectedChars.Count < 3 )*/
-						//Thread.Sleep( 500 );
-					return retData;
+                        //for(t = 0;t < NG_Hash.Length;t++ )
+                        //	retur[ t + 2 + 20 ] = NG_Hash[ t ];
 
-				default:
-					Console.WriteLine( "Receive unknown command {0}", data[ 0 ] );
-					break;
+                        //	set the account properties
+                        Console.WriteLine("Logon proof for {0},{1}", IP.ToString(), myAccount.Username);
+                        myAccount.Ip = this.IP;
+                        myAccount.Port = 0;
+                        myAccount.K = myAccount.SS_Hash;
 
-			}
-			byte []ret = { 0, 0, 0, 0 };
-			return ret;
-		}
+                        return retur;
+                    }
+                case 0x02://	Reconnect challenge
+                    {
+                        //	Console.WriteLine( "Reconnect challenge" );
 
-	}
+                        byte[] packRecoChallenge = new byte[34];
+                        packRecoChallenge[0] = 0x02;
+                        packRecoChallenge[1] = 0x00;
+                        for (t = 0; t < 16; t++)
+                            packRecoChallenge[18 + t] = 0;
+                        return packRecoChallenge;
+                    }
+                case 0x03://	Reconnect proof
+                          //	Console.WriteLine( "Reconnect proof" );
+                    return new byte[] { 0x03, 0x00 };
+                case 0x04://	Update server
+                          //	Console.WriteLine( "Update server" );
+                    break;
+                case 0x10://	Realm List					
+                          //	Console.WriteLine( "Realm lList request" );
+                    string ip = World.ServerIP;
+                    /*	if ( base.theClientHandler.IP.ToString().StartsWith( "192.168.0" ) )
+                        {
+                            ip = "192.168.0.2";
+                        }
+                        else*/
+                    if (IP.ToString() == "127.0.0.1")
+                    {
+                        ip = "127.0.0.1";
+                    }
+                    byte[] retData = new byte[25 + ip.Length + World.ServerName.Length + World.ServerPort.ToString().Length];
+                    /*
+                    byte []retData = new byte[ ]{   0x10, 45, 
+                                              0x00, 0x00, 0x00, 0x00, 
+                                              0x00, 
+                                              0x01, 0x00, 0x00, 0x00, 
+                                              0x00, 0x00, 
+                                              (byte)'D', (byte)'r', (byte)' ', (byte)'N', (byte)'e',
+                                              (byte)'x', (byte)'u', (byte)'s', 
+                                              0x00, (byte)'1', (byte)'9', (byte)'2', (byte)'.', 
+                                              (byte)'1', (byte)'6', (byte)'8', (byte)'.', 
+                                              (byte)'0', (byte)'.', 
+                                              (byte)'2', 
+                                              0x3a, 0x38, 0x30, 0x38, 0x35, 
+                                              0x00, 0x00, 0x00, 0x00, 
+                                              0x00, 0x00, 
+                                              0x01, 0x00, 
+                                              0x02, 0x00 };*/
+                    int offset = 0;
+                    Converter.ToBytes((byte)0x10, retData, ref offset);
+                    Converter.ToBytes((byte)43, retData, ref offset);
+                    Converter.ToBytes(1/*World.allConnectedChars.Count*/, retData, ref offset);
+                    Converter.ToBytes((byte)0, retData, ref offset);
+                    Converter.ToBytes(1, retData, ref offset);
+                    Converter.ToBytes((short)0, retData, ref offset);
+                    Converter.ToBytes(World.ServerName, retData, ref offset);
+                    Converter.ToBytes((byte)0, retData, ref offset);
+                    Converter.ToBytes(ip, retData, ref offset);
+                    Converter.ToBytes((byte)':', retData, ref offset);
+                    Converter.ToBytes(World.ServerPort.ToString(), retData, ref offset);
+                    Converter.ToBytes((byte)0, retData, ref offset);
+                    Converter.ToBytes(0, retData, ref offset);
+                    //	Converter.ToBytes( (short)0, retData, ref offset );//	cr erreir
+                    //Converter.ToBytes( (short)1, retData, ref offset );
+                    //Converter.ToBytes( (short)2, retData, ref offset );
+
+                    Converter.ToBytes((short)World.allConnectedChars.Count, retData, ref offset);
+                    Converter.ToBytes((byte)0, retData, ref offset);
+                    Converter.ToBytes((short)1, retData, ref offset);
+                    int atlen = 1;
+                    offset -= 3;
+                    Converter.ToBytes(offset, retData, ref atlen);
+                    Console.WriteLine("Connected player(s) {0}", World.allConnectedChars.Count);
+                    /*	if ( World.allConnectedChars.Count < 3 )*/
+                    //Thread.Sleep( 500 );
+                    return retData;
+
+                default:
+                    Console.WriteLine("Receive unknown command {0}", data[0]);
+                    break;
+
+            }
+            byte[] ret = { 0, 0, 0, 0 };
+            return ret;
+        }
+
+    }
 }
 /*
  * 
