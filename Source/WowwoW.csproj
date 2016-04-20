@@ -87,6 +87,7 @@
     <Compile Include="Networking\Authentication\AuthenticationCmd.cs" />
     <Compile Include="Networking\Authentication\AuthenticationCodes.cs" />
     <Compile Include="Networking\Authentication\AuthenticationResults.cs" />
+    <Compile Include="Networking\Authentication\HashUtilities.cs" />
     <Compile Include="Networking\Authentication\SecureRemotePassword.cs" />
     <Compile Include="Networking\Authentication\SRPParameters.cs" />
     <Compile Include="Networking\ClientHandler.cs" />
