@@ -5,9 +5,13 @@ namespace Server
     using System.Security.Cryptography;
     using System.Net.Sockets;
     using HelperTools;
+    using System.Text;
 
     public class ClientConnection : SockClient
     {
+        private BigInteger N = new BigInteger("894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7", 16);
+        private BigInteger g = new BigInteger(7);
+
         public ClientConnection(Socket sock, RemoveClientDelegate rcd)
             : base(sock, rcd)
         {
@@ -15,34 +19,8 @@ namespace Server
 
         public static int s1 = 1;
 
-        public static byte[] Reverse(byte[] from)
-        {
-            byte[] res = new byte[from.Length];
-            int i = 0;
-            for (int t = from.Length - 1; t >= 0; t--)
-            {
-                res[i++] = from[t];
-            }
-
-            return res;
-        }
-
-        public static byte[] Concat(byte[] a, byte[] b)
-        {
-            byte[] res = new byte[a.Length + b.Length];
-            for (int t = 0; t < a.Length; t++)
-                res[t] = a[t];
-            for (int t = 0; t < b.Length; t++)
-                res[t + a.Length] = b[t];
-            return res;
-        }
-
+        
         BigInteger B;
-        static byte[] N = { 0x89, 0x4B, 0x64, 0x5E, 0x89, 0xE1, 0x53, 0x5B,
-                              0xBD, 0xAD, 0x5B, 0x8B, 0x29, 0x06, 0x50, 0x53,
-                              0x08, 0x01, 0xB1, 0x8E, 0xBF, 0xBF, 0x5E, 0x8F,
-                              0xAB, 0x3C, 0x82, 0x87, 0x2A, 0x3E, 0x9B, 0xB7 };
-        static byte[] rN = Reverse(N);
 
         byte[] salt = new byte[32];
         BigInteger v;
@@ -51,8 +29,8 @@ namespace Server
         byte[] userName;
         BigInteger K;
         static Random rand = new Random();
-        //static 
         Account myAccount;
+        private int build;
 
         public static Hashtable tryLoggin = new Hashtable();
 
@@ -60,21 +38,16 @@ namespace Server
         {
             int t;
             Console.WriteLine("Received: " + Enum.ToObject(typeof(AuthenticationCodes), data[0]).ToString());
+
             switch (data[0])
             {
                 case (byte)AuthenticationCodes.CMD_AUTH_LOGON_CHALLENGE:
-                    int clientVersion = (((int)data[11]) * 256) + data[12];
-                    byte len = data[33];
-                    userName = new byte[len];
+                    ushort build = BitConverter.ToUInt16(data, 11);
+                    byte usernameLength = data[33];
+                    string usernameStr = BitConverter.ToString(data, 34, usernameLength);
+                    Buffer.BlockCopy(data, 34, userName, 0, usernameLength);
 
-                    string usern = "";
-                    for (t = 0; t < len; t++)
-                    {
-                        userName[t] = data[34 + t];
-                        usern += "" + (char)data[34 + t];
-                    }
-
-                    myAccount = World.allAccounts.FindByUserName(usern);
+                    myAccount = World.allAccounts.FindByUserName(usernameStr);
                     
                     if (myAccount == null)
                     {
@@ -89,25 +62,23 @@ namespace Server
                         // Already logged in
                     }
 
-                    SHA1 sha = new SHA1CryptoServiceProvider();
+                    var sha = new SHA1Managed();
+                    //SHA1 sha = new SHA1CryptoServiceProvider();
 
-                    string pass = ":" + myAccount.Password.ToUpper();
-                    char[] passc = pass.ToCharArray();
-                    byte[] passb = new byte[passc.Length];
-                    int ti = 0;
-                    foreach (char c in passc)
-                        passb[ti++] = (byte)c;
-                    byte[] user = Concat(userName, passb);
-                    byte[] hash = sha.ComputeHash(user, 0, user.Length);
-                    byte[] res = new Byte[hash.Length + salt.Length];
-                    t = 0;
+                    byte[] hashedCred = sha.ComputeHash(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", usernameStr, myAccount.Password.ToUpper()))); 
+                    //char[] passc = pass.ToCharArray();
+                    //byte[] passb = new byte[passc.Length];
+                    //int ti = 0;
+                    //foreach (char c in passc)
+                    //    passb[ti++] = (byte)c;
+                    //byte[] user = Concat(userName, passb);
+                    //byte[] hash = sha.ComputeHash(user, 0, user.Length);
+                    byte[] res = new byte[hashedCred.Length + salt.Length];
                     rand.NextBytes(salt);
-                    foreach (byte s in salt)
-                        res[t++] = s;
-                    foreach (byte s in hash)
-                        res[t++] = s;
-                    byte[] hash2 = sha.ComputeHash(res, 0, res.Length);
-                    byte[] x = Reverse(hash2);
+                    Buffer.BlockCopy(salt, 0, res, 0, salt.Length);
+                    Buffer.BlockCopy(hashedCred, 0, res, salt.Length, hashedCred.Length);
+
+                    byte[] x = sha.ComputeHash(res);
 
                     rN = Reverse(N);
                     rand.NextBytes(b);
@@ -116,36 +87,17 @@ namespace Server
 
                     BigInteger bi = new BigInteger(x);
                     BigInteger bi2 = new BigInteger(rN);
-                    BigInteger g = new BigInteger(new byte[] { 7 });
-                    v = g.modPow(bi, bi2);
+                    v = g.ModPow(bi, bi2);
 
-                    K = new BigInteger(new Byte[] { 3 });
+                    K = new BigInteger(3);
                     BigInteger temp1 = K * v;
-                    BigInteger temp2 = g.modPow(new BigInteger(rb), new BigInteger(rN));
+                    BigInteger temp2 = g.ModPow(new BigInteger(rb), new BigInteger(rN));
                     BigInteger temp3 = temp1 + temp2;
                     B = temp3 % new BigInteger(rN);
 
-                    /*	byte []ezfd= B.getBytes();
-                        Console.WriteLine("B");
-                        HexViewer.View( ezfd, 0, ezfd.Length );
-                        BigInteger C = new BigInteger();
-
-                        Console.WriteLine("C/Rn {0}", temp3/new BigInteger( rN ) );*/
-                    //Console.WriteLine("temp1 {0}",temp1.ToHexString());
-                    //Console.WriteLine("temp2 {0}",temp2.ToHexString());
-                    //Console.WriteLine("temp3 {0}",temp3.ToHexString());
-                    /*		for(int ll = 0;ll < 6;ll++)
-                            {
-                                C = B;
-                                C += new BigInteger( rN ) * ll;
-                                C -= temp1;
-                                Console.WriteLine("temp3 {0}",C.ToHexString());
-                            }*/
-
                     byte[] pack = new byte[118];
-                    //byte[] pack = new byte[119];
                     pack[0] = pack[1] = 0;
-                    byte[] tB = Reverse(B.getBytes());
+                    byte[] tB = Reverse(B.GetBytes());
                     for (t = 0; t < tB.Length; t++)
                         pack[3 + t] = tB[t];
                     pack[35] = 1;// g_length
@@ -178,21 +130,21 @@ namespace Server
                         //A = new byte[] { 0x23, 0x2f, 0xb1, 0xb8, 0x85, 0x29, 0x64, 0x3d, 0x95, 0xb8, 0xdc, 0xe7, 0x8f, 0x27, 0x50, 0xc7, 0x5b, 0x2d, 0xf3, 0x7a, 0xcb, 0xa8, 0x73, 0xeb, 0x31, 0x07, 0x38, 0x39, 0xed, 0xa0, 0x73, 0x8d };
                         byte[] rA = Reverse(A);
                         //	B = new BigInteger( new byte[] { 0x64, 0x5d, 0x1f, 0x78, 0x97, 0x30, 0x73, 0x70, 0x1e, 0x12, 0xbc, 0x98, 0xaa, 0x38, 0xea, 0x99, 0xb4, 0xbc, 0x43, 0x5c, 0x32, 0xe8, 0x44, 0x7c, 0x73, 0xab, 0x07, 0x7a, 0xe4, 0xd7, 0x59, 0x64 } );
-                        byte[] AB = Concat(A, Reverse(B.getBytes()));
+                        byte[] AB = Concat(A, Reverse(B.GetBytes()));
 
                         SHA1 shaM1 = new SHA1CryptoServiceProvider();
                         byte[] U = shaM1.ComputeHash(AB);
                         //	U = new byte[] { 0x2f, 0x49, 0x69, 0xac, 0x9f, 0x38, 0x7f, 0xd6, 0x72, 0x23, 0x6f, 0x94, 0x91, 0xa5, 0x16, 0x77, 0x7c, 0xdd, 0xe1, 0xc1 };
                         byte[] rU = Reverse(U);
 
-                        temp1 = v.modPow(new BigInteger(rU), new BigInteger(rN));
+                        temp1 = v.ModPow(new BigInteger(rU), new BigInteger(rN));
                         temp2 = temp1 * new BigInteger(rA);
-                        temp3 = temp2.modPow(new BigInteger(rb), new BigInteger(rN));
+                        temp3 = temp2.ModPow(new BigInteger(rb), new BigInteger(rN));
 
                         byte[] S1 = new byte[16];
                         byte[] S2 = new byte[16];
                         byte[] S = new byte[32];
-                        byte[] temp = temp3.getBytes();
+                        byte[] temp = temp3.GetBytes();
                         /*	Console.WriteLine("temp");
                             HexViewer.View( temp, 0, temp.Length );
                             Console.WriteLine("temp1 {0}", temp1.ToHexString());
@@ -229,8 +181,8 @@ namespace Server
                         byte[] Temp = Concat(NG_Hash, userHash);
                         Temp = Concat(Temp, salt);
                         Temp = Concat(Temp, A);
-                        Temp = Concat(Temp, B.getBytes());
-                        Temp = Concat(Temp, K.getBytes());//SS_Hash );
+                        Temp = Concat(Temp, B.GetBytes());
+                        Temp = Concat(Temp, K.GetBytes());//SS_Hash );
 
                         byte[] M1 = shaM1.ComputeHash(Temp);
 
@@ -334,12 +286,12 @@ namespace Server
                     return retData;
 
                 default:
-                    Console.WriteLine("Receive unknown command {0}", data[0]);
+                    Console.WriteLine("Received unknown: " + Enum.ToObject(typeof(AuthenticationCodes), data[0]).ToString());
                     break;
 
             }
-            byte[] ret = { 0, 0, 0, 0 };
-            return ret;
+
+            return new byte[] { 0, 0, 0, 0 };
         }
 
     }
