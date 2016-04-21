@@ -1,51 +1,47 @@
 namespace Server
 {
-    using System;
-    using System.Collections;
-    using System.Security.Cryptography;
-    using System.Net.Sockets;
     using HelperTools;
+
+    using System;
+    using System.Net.Sockets;
+    using System.Security.Cryptography;
     using System.Text;
-    using System.IO;
+
+    using WowwoW.Networking.Authentication;
+
     public class ClientConnection : SockClient
     {
+        private static RandomNumberGenerator randomGenerator = new RNGCryptoServiceProvider();
         private BigInteger N = new BigInteger("894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7", 16);
         private BigInteger g = new BigInteger(7);
+        private BigInteger k = new BigInteger(3);
+        private BigInteger s;
+        private BigInteger v;
+        private BigInteger B;
+        private BigInteger b;
+        private BigInteger x;
 
         public ClientConnection(Socket sock, RemoveClientDelegate rcd)
             : base(sock, rcd)
         {
         }
-
-        public static int s1 = 1;
-
         
-        BigInteger B;
-
-        byte[] salt = new byte[32];
-        BigInteger v;
-        byte[] b = new byte[20];
-        byte[] rb;
-        byte[] userName;
-        BigInteger K;
         static Random rand = new Random();
         Account myAccount;
-        private int build;
-
-        public static Hashtable tryLoggin = new Hashtable();
+        private ushort build;
+        private byte[] salt = new byte[32];
+        
 
         public override byte[] ProcessDataReceived(byte[] data, int length)
         {
-            int t;
             Console.WriteLine("Received: " + Enum.ToObject(typeof(AuthenticationCodes), data[0]).ToString());
 
             switch (data[0])
             {
                 case (byte)AuthenticationCodes.CMD_AUTH_LOGON_CHALLENGE:
-                    ushort build = BitConverter.ToUInt16(data, 11);
+                    build = BitConverter.ToUInt16(data, 11);
                     byte usernameLength = data[33];
-                    string usernameStr = BitConverter.ToString(data, 34, usernameLength);
-                    Buffer.BlockCopy(data, 34, userName, 0, usernameLength);
+                    string usernameStr = Encoding.UTF8.GetString(data, 34, usernameLength);
 
                     myAccount = World.allAccounts.FindByUserName(usernameStr);
                     
@@ -57,160 +53,40 @@ namespace Server
 
                     if (myAccount.SelectedChar != null)
                     {
-                        //	Console.WriteLine("Already loggin");
                         return new byte[] { 1, 0x6 };
-                        // Already logged in
                     }
 
                     var sha = new SHA1Managed();
-                    //SHA1 sha = new SHA1CryptoServiceProvider();
 
                     byte[] hashedCred = sha.ComputeHash(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", usernameStr, myAccount.Password.ToUpper()))); 
-                    //char[] passc = pass.ToCharArray();
-                    //byte[] passb = new byte[passc.Length];
-                    //int ti = 0;
-                    //foreach (char c in passc)
-                    //    passb[ti++] = (byte)c;
-                    //byte[] user = Concat(userName, passb);
-                    //byte[] hash = sha.ComputeHash(user, 0, user.Length);
                     byte[] res = new byte[hashedCred.Length + salt.Length];
                     rand.NextBytes(salt);
                     Buffer.BlockCopy(salt, 0, res, 0, salt.Length);
                     Buffer.BlockCopy(hashedCred, 0, res, salt.Length, hashedCred.Length);
 
-                    byte[] x = sha.ComputeHash(res);
-                    
-                    //rN = Reverse(N);
-                    //rand.NextBytes(b);
-                    //rb = Reverse(b);
+                    x = new BigInteger(sha.ComputeHash(res));
+                    v = g.ModPow(x, N);
+                    b = SecureRemotePassword.RandomNumber();
+                    s = SecureRemotePassword.RandomNumber();
+                    BigInteger gmod = g.ModPow(b, N);
+                    B = ((v * 3) + gmod) % N;
+                    BigInteger unk3 = SecureRemotePassword.RandomNumber(16);
 
+                    byte[] packet = new byte[119];
+                    packet[0] = 0;
+                    packet[1] = 0;
+                    packet[2] = 0;
+                    Buffer.BlockCopy(B.GetBytesBE(32), 0, packet, 3, 32);
+                    packet[35] = 1;
+                    Buffer.BlockCopy(g.GetBytes(1), 0, packet, 36, 1);
+                    packet[37] = 32;
+                    Buffer.BlockCopy(N.GetBytesBE(32), 0, packet, 38, 32);
+                    Buffer.BlockCopy(s.GetBytesBE(32), 0, packet, 70, 32);
+                    Buffer.BlockCopy(unk3.GetBytesBE(16), 0, packet, 102, 16);
+                    return packet;
 
-                    //BigInteger bi = new BigInteger(x);
-                    //BigInteger bi2 = new BigInteger(rN);
-                    //v = g.ModPow(bi, bi2);
-
-                    //K = new BigInteger(3);
-                    //BigInteger temp1 = K * v;
-                    //BigInteger temp2 = g.ModPow(new BigInteger(rb), new BigInteger(rN));
-                    //BigInteger temp3 = temp1 + temp2;
-                    //B = temp3 % new BigInteger(rN);
-
-                    //byte[] pack = new byte[118];
-                    //pack[0] = pack[1] = 0;
-                    //byte[] tB = Reverse(B.GetBytes());
-                    //for (t = 0; t < tB.Length; t++)
-                    //    pack[3 + t] = tB[t];
-                    //pack[35] = 1;// g_length
-                    //pack[36] = 7;// g
-                    //pack[37] = 32;// n_len
-                    //for (t = 0; t < N.Length; t++)
-                    //    pack[38 + t] = N[t];
-                    //for (t = 0; t < salt.Length; t++)
-                    //    pack[70 + t] = salt[t];
-                    //for (t = 0; t < 16; t++)
-                    //    //for (t = 0; t < 17; t++)
-                    //    pack[102 + t] = 0;
-
-                    //return pack;
+                case (byte)AuthenticationCodes.CMD_AUTH_LOGON_PROOF:
                     break;
-
-                case 0x01://	Logon proof	
-                    {
-                        //Console.WriteLine("Logon proof" );
-                        //byte[] A = new byte[32];
-                        //for (t = 0; t < 32; t++)
-                        //{
-                        //    A[t] = data[t + 1];
-                        //}
-                        //byte[] kM1 = new byte[20];
-                        //for (t = 0; t < 20; t++)
-                        //{
-                        //    kM1[t] = data[t + 1 + 32];
-                        //}
-
-                        ////A = new byte[] { 0x23, 0x2f, 0xb1, 0xb8, 0x85, 0x29, 0x64, 0x3d, 0x95, 0xb8, 0xdc, 0xe7, 0x8f, 0x27, 0x50, 0xc7, 0x5b, 0x2d, 0xf3, 0x7a, 0xcb, 0xa8, 0x73, 0xeb, 0x31, 0x07, 0x38, 0x39, 0xed, 0xa0, 0x73, 0x8d };
-                        //byte[] rA = Reverse(A);
-                        ////	B = new BigInteger( new byte[] { 0x64, 0x5d, 0x1f, 0x78, 0x97, 0x30, 0x73, 0x70, 0x1e, 0x12, 0xbc, 0x98, 0xaa, 0x38, 0xea, 0x99, 0xb4, 0xbc, 0x43, 0x5c, 0x32, 0xe8, 0x44, 0x7c, 0x73, 0xab, 0x07, 0x7a, 0xe4, 0xd7, 0x59, 0x64 } );
-                        //byte[] AB = Concat(A, Reverse(B.GetBytes()));
-
-                        //SHA1 shaM1 = new SHA1CryptoServiceProvider();
-                        //byte[] U = shaM1.ComputeHash(AB);
-                        ////	U = new byte[] { 0x2f, 0x49, 0x69, 0xac, 0x9f, 0x38, 0x7f, 0xd6, 0x72, 0x23, 0x6f, 0x94, 0x91, 0xa5, 0x16, 0x77, 0x7c, 0xdd, 0xe1, 0xc1 };
-                        //byte[] rU = Reverse(U);
-
-                        //temp1 = v.ModPow(new BigInteger(rU), new BigInteger(rN));
-                        //temp2 = temp1 * new BigInteger(rA);
-                        //temp3 = temp2.ModPow(new BigInteger(rb), new BigInteger(rN));
-
-                        //byte[] S1 = new byte[16];
-                        //byte[] S2 = new byte[16];
-                        //byte[] S = new byte[32];
-                        //byte[] temp = temp3.GetBytes();
-                        ///*	Console.WriteLine("temp");
-                        //    HexViewer.View( temp, 0, temp.Length );
-                        //    Console.WriteLine("temp1 {0}", temp1.ToHexString());
-                        //    Console.WriteLine("temp2 {0}", temp2.ToHexString());
-                        //    Console.WriteLine("temp3 {0}", temp3.ToHexString());*/
-                        //Buffer.BlockCopy(temp, 0, S, 0, temp.Length);
-                        //byte[] rS = Reverse(S);
-
-
-                        //for (t = 0; t < 16; t++)
-                        //{
-                        //    S1[t] = rS[t * 2];
-                        //    S2[t] = rS[(t * 2) + 1];
-                        //}
-                        //byte[] hashS1 = shaM1.ComputeHash(S1);
-                        //byte[] hashS2 = shaM1.ComputeHash(S2);
-                        //myAccount.SS_Hash = new byte[hashS1.Length + hashS2.Length];
-                        //for (t = 0; t < hashS1.Length; t++)
-                        //{
-                        //    myAccount.SS_Hash[t * 2] = hashS1[t];
-                        //    myAccount.SS_Hash[(t * 2) + 1] = hashS2[t];
-                        //}
-
-                        ////	SS_Hash = new byte[] { 0x02, 0x61, 0xf4, 0xeb, 0x48, 0x91, 0xb6, 0x6a, 0x1a, 0x82, 0x6e, 0xb7, 0x79, 0x28, 0xd8, 0x64, 0xb7, 0xea, 0x14, 0x54, 0x38, 0xdb, 0x7c, 0xfd, 0x0d, 0x3d, 0x2f, 0xc0, 0x22, 0xce, 0xcc, 0x46, 0x83, 0x79, 0xf2, 0xc0, 0x87, 0x78, 0x7f, 0x14 };
-
-                        //byte[] NHash = shaM1.ComputeHash(N);
-                        //byte[] GHash = shaM1.ComputeHash(new byte[] { 7 });
-                        //byte[] userHash = shaM1.ComputeHash(userName);
-                        //byte[] NG_Hash = new byte[20];
-                        //for (t = 0; t < 20; t++)
-                        //{
-                        //    NG_Hash[t] = (byte)(NHash[t] ^ GHash[t]);
-                        //}
-                        //byte[] Temp = Concat(NG_Hash, userHash);
-                        //Temp = Concat(Temp, salt);
-                        //Temp = Concat(Temp, A);
-                        //Temp = Concat(Temp, B.GetBytes());
-                        //Temp = Concat(Temp, K.GetBytes());//SS_Hash );
-
-                        //byte[] M1 = shaM1.ComputeHash(Temp);
-
-                        //Temp = Concat(A, kM1);
-                        //Temp = Concat(Temp, myAccount.SS_Hash);
-
-                        //byte[] M2 = shaM1.ComputeHash(Temp);
-
-                        //byte[] retur = new byte[M2.Length + 4/*NG_Hash.Length */+ 2];
-                        ////	byte []retur = new byte[ M2.Length + NG_Hash.Length + 2 ];
-                        //retur[0] = 0x1;
-                        //retur[1] = 0x0;
-                        //for (t = 0; t < M2.Length; t++)
-                        //    retur[t + 2] = M2[t];
-
-                        ////for(t = 0;t < NG_Hash.Length;t++ )
-                        ////	retur[ t + 2 + 20 ] = NG_Hash[ t ];
-
-                        ////	set the account properties
-                        //Console.WriteLine("Logon proof for {0},{1}", IP.ToString(), myAccount.Username);
-                        //myAccount.Ip = this.IP;
-                        //myAccount.Port = 0;
-                        //myAccount.K = myAccount.SS_Hash;
-
-                        //return retur;
-                        break;
-                    }
                 case 0x02://	Reconnect challenge
                     {
                         //	Console.WriteLine( "Reconnect challenge" );
