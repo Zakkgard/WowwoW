@@ -3,6 +3,7 @@ namespace Server
     using HelperTools;
 
     using System;
+    using System.Linq;
     using System.Net.Sockets;
     using System.Security.Cryptography;
     using System.Text;
@@ -20,6 +21,7 @@ namespace Server
         private BigInteger B;
         private BigInteger b;
         private BigInteger x;
+        private ushort[] supportedBuilds = new ushort[] { 5875, 6005, 6141 };
 
         public ClientConnection(Socket sock, RemoveClientDelegate rcd)
             : base(sock, rcd)
@@ -86,17 +88,30 @@ namespace Server
                     return packet;
 
                 case (byte)AuthenticationCodes.CMD_AUTH_LOGON_PROOF:
+
+                    if (!supportedBuilds.Contains(build))
+                    {
+                        // the client build is not supported, return WOW_FAIL_VERSION_INVALID
+                        return new byte[]
+                        {
+                            (byte)AuthenticationCodes.CMD_AUTH_LOGON_CHALLENGE,
+                            0x00,
+                            (byte)AuthenticationResults.WOW_FAIL_VERSION_INVALID
+                        };
+                    }
+
                     break;
                 case 0x02://	Reconnect challenge
                     {
                         //	Console.WriteLine( "Reconnect challenge" );
 
-                        byte[] packRecoChallenge = new byte[34];
-                        packRecoChallenge[0] = 0x02;
-                        packRecoChallenge[1] = 0x00;
-                        for (t = 0; t < 16; t++)
-                            packRecoChallenge[18 + t] = 0;
-                        return packRecoChallenge;
+                        //byte[] packRecoChallenge = new byte[34];
+                        //packRecoChallenge[0] = 0x02;
+                        //packRecoChallenge[1] = 0x00;
+                        //for (t = 0; t < 16; t++)
+                        //    packRecoChallenge[18 + t] = 0;
+                        //return packRecoChallenge;
+                        break;
                     }
                 case 0x03://	Reconnect proof
                           //	Console.WriteLine( "Reconnect proof" );

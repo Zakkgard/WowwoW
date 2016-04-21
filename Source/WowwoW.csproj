@@ -14,12 +14,13 @@
     <PostBuildEvent />
     <StartupObject />
     <NoConfig>false</NoConfig>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <NoStdLib>false</NoStdLib>
@@ -32,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE;TESTCONSECUTIF</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <NoStdLib>false</NoStdLib>
@@ -44,6 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Volhv|AnyCPU' ">
     <NoStdLib>false</NoStdLib>
@@ -56,6 +59,7 @@
     <DefineConstants>TRACE,VOLHV</DefineConstants>
     <OutputPath>bin\VolhvRelease\</OutputPath>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.6.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
@@ -167,6 +171,7 @@
     <Compile Include="DDB\ClassDescriptor.cs" />
     <Compile Include="DDB\ClassDescriptorList.cs" />
     <Compile Include="DDB\ClientHandler.cs" />
+    <None Include="app.config" />
     <None Include="DDB\DB.cs" />
     <Compile Include="DDB\DBConnectoid.cs" />
     <Compile Include="DDB\DBReader.cs" />
