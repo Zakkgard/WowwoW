@@ -43,11 +43,11 @@ namespace Server
                 }
 
                 int len = clientSocket.EndReceive(result);
-                if (len <= 0)
-                {
-                    Dispose();
-                    return;
-                }
+                //if (len <= 0)
+                //{
+                //    Dispose();
+                //    return;
+                //}
 
                 byte[] toSend = ProcessDataReceived(dataReceive, len);
                 if (toSend != null)

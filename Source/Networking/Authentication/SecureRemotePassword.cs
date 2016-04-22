@@ -366,7 +366,7 @@ namespace WowwoW.Networking.Authentication
             }
         }
 
-        public BigInteger Hash(params HashUtilities.HashDataBroker[] brokers)
+        public static BigInteger Hash(params HashUtilities.HashDataBroker[] brokers)
         {
             return HashUtilities.HashToBigInteger(SRPParameters.Hash, brokers);
         }
