@@ -93,6 +93,7 @@
     <Compile Include="Networking\Authentication\AuthenticationResults.cs" />
     <Compile Include="Networking\Authentication\HashUtilities.cs" />
     <Compile Include="Networking\Authentication\SecureRemotePassword.cs" />
+    <Compile Include="Networking\Authentication\SRP6.cs" />
     <Compile Include="Networking\Authentication\SRPParameters.cs" />
     <Compile Include="Networking\ClientHandler.cs" />
     <Compile Include="Networking\ClientService.cs" />

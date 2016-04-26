@@ -12,16 +12,8 @@ namespace Server
 
     public class ClientConnection : SockClient
     {
+        private SRP6 SRP;
         private static RandomNumberGenerator randomGenerator = new RNGCryptoServiceProvider();
-        private HashAlgorithm SHA1 = new SHA1Managed();
-        private BigInteger N = new BigInteger("894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7", 16);
-        private BigInteger g = new BigInteger(7);
-        private BigInteger k = new BigInteger(3);
-        private BigInteger s;
-        private BigInteger v;
-        private BigInteger B;
-        private BigInteger b;
-        private BigInteger x;
         private ushort[] supportedBuilds = new ushort[] { 5875, 6005, 6141 };
         private string usernameStr;
 
@@ -38,6 +30,8 @@ namespace Server
 
         public override byte[] ProcessDataReceived(byte[] data, int length)
         {
+            //SecureRemotePassword.Test();
+
             Console.WriteLine("Received: " + Enum.ToObject(typeof(AuthenticationCodes), data[0]).ToString());
 
             switch (data[0])
@@ -71,32 +65,20 @@ namespace Server
                         return new byte[] { 1, 0x6 };
                     }
 
-
-                    byte[] hashedCred = SHA1.ComputeHash(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", usernameStr, myAccount.Password.ToUpper()))); 
-                    byte[] res = new byte[hashedCred.Length + salt.Length];
-                    rand.NextBytes(salt);
-                    Buffer.BlockCopy(salt, 0, res, 0, salt.Length);
-                    Buffer.BlockCopy(hashedCred, 0, res, salt.Length, hashedCred.Length);
-
-                    x = new BigInteger(SHA1.ComputeHash(res));
-                    v = g.ModPow(x, N);
-                    b = SecureRemotePassword.RandomNumber();
-                    s = SecureRemotePassword.RandomNumber();
-                    BigInteger gmod = g.ModPow(b, N);
-                    B = ((v * 3) + gmod) % N;
-                    BigInteger unk3 = SecureRemotePassword.RandomNumber(16);
-
+                    var identityHash = SRP6.GenerateCredentialsHash(usernameStr, myAccount.Password);
+                    SRP = new SRP6(usernameStr, identityHash);
+                    
                     byte[] packet = new byte[119];
                     packet[0] = 0;
                     packet[1] = 0;
                     packet[2] = 0;
-                    Buffer.BlockCopy(B.GetBytesBE(32), 0, packet, 3, 32);
+                    Buffer.BlockCopy(SRP.PublicEphemeralB.GetBytes(), 0, packet, 3, 32);
                     packet[35] = 1;
-                    Buffer.BlockCopy(g.GetBytes(1), 0, packet, 36, 1);
+                    Buffer.BlockCopy(SRP.Generator.GetBytes(), 0, packet, 36, 1);
                     packet[37] = 32;
-                    Buffer.BlockCopy(N.GetBytesBE(32), 0, packet, 38, 32);
-                    Buffer.BlockCopy(s.GetBytesBE(32), 0, packet, 70, 32);
-                    Buffer.BlockCopy(unk3.GetBytesBE(16), 0, packet, 102, 16);
+                    Buffer.BlockCopy(SRP.Modulus.GetBytes(), 0, packet, 38, 32);
+                    Buffer.BlockCopy(SRP.Salt.GetBytes(), 0, packet, 70, 32);
+                    Buffer.BlockCopy(SRP.Unknown.GetBytes(), 0, packet, 102, 16);
                     return packet;
 
                 case (byte)AuthenticationCodes.CMD_AUTH_LOGON_PROOF:
@@ -120,61 +102,20 @@ namespace Server
                     //uint8 securityFlags;
 
                     BigInteger A = new BigInteger(data.Skip(1).Take(32).ToArray());
-                    BigInteger M1 = new BigInteger(data.Skip(33).Take(20).ToArray());
-                    BigInteger u = new BigInteger(SecureRemotePassword.Hash(A, B.GetBytesBE()).GetBytesBE());
-                    BigInteger S = (new BigInteger(A.GetBytesBE()) * (v.ModPow(u, new BigInteger(N.GetBytesBE())))).ModPow(new BigInteger(b.GetBytesBE()), new BigInteger(N.GetBytesBE()));
-                    byte[] t = S.GetBytesBE(32);
-                    byte[] t1 = new byte[16];
-                    byte[] vK = new byte[40];
 
-                    for (int i = 0; i < 16; i++)
-                    {
-                        t1[i] = t[i * 2];
-                    }
+                    //check if A equals zero and abort
+                    //if (A == 0)
+                    //{
 
-                    var hashedT1 = SHA1.ComputeHash(t1);
-                    for (int i = 0; i < 20; i++)
-                    {
-                        vK[i * 2] = hashedT1[i];
-                    }
-
-                    for (int i = 0; i < 16; ++i)
-                    {
-                        t1[i] = t[i * 2 + 1];
-                    }
-
-                    hashedT1 = SHA1.ComputeHash(t1);
-                    for (int i = 0; i < 20; ++i)
-                    {
-                        vK[i * 2 + 1] = hashedT1[i];
-                    }
-
-                    BigInteger K = new BigInteger(vK, 40);
-                    var hashedN = SHA1.ComputeHash(N.GetBytes());
-                    var hashed_g = SHA1.ComputeHash(g.GetBytes());
-
-                    for (int i = 0; i < 20; i++)
-                    {
-                        hashedN[i] ^= hashed_g[i];
-                    }
-
-                    BigInteger t3 = new BigInteger(hashedN);
-                    byte[] t4 = SHA1.ComputeHash(Encoding.UTF8.GetBytes(usernameStr));
-
-                    var h1 = SHA1.ComputeHash(t3.GetBytes());
-                    var h2 = SecureRemotePassword.Hash(h1, t4);
-                    var h3 = new BigInteger(SecureRemotePassword.Hash(h2, s.GetBytes(), A.GetBytes(), B.GetBytes(), K.GetBytes()).GetBytes(), 20);
-
-                    BigInteger M = new BigInteger(SecureRemotePassword.Hash(t3, t4, s, A, B, K));
-                    BigInteger M_temp = new BigInteger(SecureRemotePassword.Hash(t3.GetBytesBE(), t4, s.GetBytesBE(), A.GetBytesBE(), B.GetBytesBE(), K.GetBytesBE()));
+                    //}
                     
-                    byte[] proof = SecureRemotePassword.Hash(A, M1, myAccount.SS_Hash).GetBytesBE();
-
-                    byte[] packetProof = new byte[23];
+                    BigInteger proof = new BigInteger(data.Skip(33).Take(20).ToArray());
+                    SRP.PublicEphemeralA = A;
+                    
+                    byte[] packetProof = new byte[32];
                     packetProof[0] = 1;
                     packetProof[1] = 0;
-                    Buffer.BlockCopy(proof, 0, packetProof, 3, 20);
-                    packetProof[22] = 0;
+                    Buffer.BlockCopy(SRP.ServerSessionKeyProof.GetBytes(), 0, packetProof, 2, 20);
 
                     return packetProof;
                 case 0x02://	Reconnect challenge

@@ -52,6 +52,7 @@
         private static readonly BigInteger s_generator = new BigInteger(7);
         private static readonly BigInteger s_modulus =
             new BigInteger("894B645E89E1535BBDAD5B8B290650530801B18EBFBF5E8FAB3C82872A3E9BB7", 16);
+        private static readonly BigInteger s_multiplier = new BigInteger(3);
 
         /// <summary>
         /// All operations are mod this number. It should be a large prime.
@@ -66,6 +67,11 @@
         public BigInteger Generator
         {
             get { return s_generator; }
+        }
+
+        public BigInteger Multiplier
+        {
+            get { return s_multiplier; }
         }
 
         public static SRPParameters Defaults
