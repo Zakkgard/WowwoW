@@ -72,13 +72,18 @@ namespace Server
                     packet[0] = 0;
                     packet[1] = 0;
                     packet[2] = 0;
-                    Buffer.BlockCopy(SRP.PublicEphemeralB.GetBytes(), 0, packet, 3, 32);
+                    //Buffer.BlockCopy(SRP.PublicEphemeralB.GetBytes(), 0, packet, 3, 32);
+                    Array.Copy(SRP.PublicEphemeralB.GetBytes(), 0, packet, 3, 32);
                     packet[35] = 1;
-                    Buffer.BlockCopy(SRP.Generator.GetBytes(), 0, packet, 36, 1);
+                    //Buffer.BlockCopy(SRP.Generator.GetBytes(), 0, packet, 36, 1);
+                    packet[36] = 7;
                     packet[37] = 32;
-                    Buffer.BlockCopy(SRP.Modulus.GetBytes(), 0, packet, 38, 32);
-                    Buffer.BlockCopy(SRP.Salt.GetBytes(), 0, packet, 70, 32);
-                    Buffer.BlockCopy(SRP.Unknown.GetBytes(), 0, packet, 102, 16);
+                    //Buffer.BlockCopy(SRP.Modulus.GetBytes(), 0, packet, 38, 32);
+                    //Buffer.BlockCopy(SRP.Salt.GetBytes(), 0, packet, 70, 32);
+                    //Buffer.BlockCopy(SRP.Unknown.GetBytes(), 0, packet, 102, 16);
+                    Array.Copy(SRP.Modulus.GetBytes(), 0, packet, 38, 32);
+                    Array.Copy(SRP.Salt.GetBytes(), 0, packet, 70, 32);
+                    Array.Copy(SRP.Unknown.GetBytes(), 0, packet, 102, 16);
                     return packet;
 
                 case (byte)AuthenticationCodes.CMD_AUTH_LOGON_PROOF:
@@ -115,7 +120,7 @@ namespace Server
                     byte[] packetProof = new byte[32];
                     packetProof[0] = 1;
                     packetProof[1] = 0;
-                    Buffer.BlockCopy(SRP.ServerSessionKeyProof.GetBytes(), 0, packetProof, 2, 20);
+                    Array.Copy(SRP.ServerSessionKeyProof.GetBytes(), 0, packetProof, 2, 20);
 
                     return packetProof;
                 case 0x02://	Reconnect challenge
